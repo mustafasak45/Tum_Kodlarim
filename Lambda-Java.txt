@@ -1,0 +1,501 @@
+ASCII koduya Variableyi çağırma:
+
+int sayi=10;
+        char harf='a';
+        String str="banan";
+
+        System.out.println(sayi+harf);//10+97
+        System.out.println(str+harf);//banana
+        System.out.println(harf+2);//97+2
+--------------------------------------------------------
+
+NOT:char değerin ASCII Kodunu yazdırmak için;
+
+System.out.println(girilen_Harf+1-1); 
+System.out.println((int)girilen_Harf);
+----------------------------------------------------
+
+Swap(TAKAS):
+
+int sayi1=10,sayi2=20,toplam;
+        System.out.println("Swaptan önce sayi1:"+sayi1);
+        System.out.println("Swaptan önce sayi2:"+sayi2);
+
+    toplam=sayi1+sayi2;
+    sayi1=toplam-sayi1;
+    sayi2=toplam-sayi2;
+        System.out.println("Swaptan sonra sayi1:"+sayi1);
+        System.out.println("Swaptan sonra sayi2:"+sayi2);
+------
+
+int sayi1=10,sayi2=20;
+
+        System.out.println("Swaptan önce sayi1:"+sayi1);
+        System.out.println("Swaptan önce sayi2:"+sayi2);
+        sayi1=sayi1+sayi2;
+        sayi2=sayi1-sayi2;
+        sayi1=sayi1-sayi2;
+        System.out.println("Swaptan sonra sayi1:"+sayi1);
+        System.out.println("Swaptan sonra sayi2:"+sayi2);
+
+-----------------------------------------------------------
+
+Scanner
+
+ Scanner scan=new Scanner(System.in);
+ System.out.println("İsminizi girin:");
+
+ String kullaniciIsmi=scan.next();
+ System.out.println("İsminiz: "+kullaniciIsmi);
+
+Girilen İki veya daha fazla ismi almak için:
+
+ Scanner scan = new Scanner(System.in);
+        System.out.println("lutfen isminizi giriniz \naralarda Enter tusuna basiniz");
+        String isim= scan.nextLine();
+ 	System.out.println(isim);
+----------------------------------------------------------
+İlk Harfi büyük yazdırma--toUpperCase():
+
+ Scanner scan=new Scanner(System.in);
+
+        System.out.println("Adınızı girin");
+
+        char ilkHarf=scan.next().toUpperCase().charAt(0);
+        System.out.println("İsmin İlk Harfi: "+ilkHarf);
+
+------------------------------------------------------------------
+DataCasting:
+
+(char a değişkenine +1 ekleyip b yazdırma)
+
+char harf='a';
+        char yeniHarf=(char)(harf+1);
+        System.out.println(yeniHarf);
+
+(int sayi3='c' ekrana ASCII kodunu yazdırma):
+
+	int sayi3='c';
+        System.out.println("sayi3: "+sayi3);//99
+
+(iki farklı variable ile işlem yaparken kapsamlı olana göre yazdırma)
+
+		double sayi3=5;
+		int sayi1=23;
+       		System.out.println(sayi1/sayi3);
+-------------------------------------------------------
+
+AutoWidening(Önce işlem sonra asign(atama) ya örnek):
+
+ byte sayi1=23;
+ short sayi2=55;
+ double sayi4=(double)sayi2/sayi1;
+
+//(double yi yazdığımız için eşitlikten sonraki ifadeyi doubleye otomatik çeviriyor.)
+System.out.println(sayi4); //cevap 2.3913.....
+
+sayi4=sayi2/sayi1;        // double yi yazmayınca cevap 2.0 çıkıyor
+System.out.println(sayi4);
+
+
+-------------------------------------------------------------
+ExplicitNarrowing:
+
+int sayi1=-129;
+
+        byte sayi2= (byte) sayi1;
+        System.out.println(sayi2); //ekran çıktısı 127dir. çünkü byte max değeri 127 dir.
+
+------------------------------------------------------------
+
+PreIncrement
+
+int num1=9;
+        int num2=++num1;   //num1'i arttırır sonra num2'ye atar
+        System.out.println("PreIncrement :");
+        System.out.println("num1 :"+num1);
+        System.out.println("num2 :"+num2);
+---------------------------------------------------------------
+PostIncrement
+
+ 	int num3=9;
+        int num4=num3++;  //num3'ü num4' eşitler sonra num3'ü 1 arttırır
+        System.out.println("PostIncrement :");
+        System.out.println("num1 :"+num3);
+        System.out.println("num2 :"+num4);
+
+POST-PRE Increment e örnek:
+
+  int i = 2;
+        i = i++ * ++i * 2;//bu satırda eşitlikten sonra i++ yaparak i'nin değeri bir sonraki işlemde +1 artmıştır
+      //i = 2   *(3+1)* 2
+        System.out.println("i = " + i);
+        int x = 1;
+        x = ++x * x++ * x;
+      //x = 2   * 2   * 3
+        System.out.println("x = " + x);
+-----------------------------------------------------------------------------------
+Mod ALMA:(RAKAMLARI TOPLAMINI BULMA ÖRNEĞİ)
+
+Scanner scan=new Scanner(System.in);
+        System.out.println("4 basamaklı Pozitif bir Tamsayı girin:");
+
+        int sayi=scan.nextInt();
+        int birlerBasamagi=0,toplam=0;
+
+        birlerBasamagi=sayi%10;
+        toplam+=birlerBasamagi;
+        sayi/=10;
+
+        birlerBasamagi=sayi%10;
+        toplam+=birlerBasamagi;
+        sayi/=10;
+
+        birlerBasamagi=sayi%10;
+        toplam+=birlerBasamagi;
+        sayi/=10;
+
+        birlerBasamagi=sayi%10;
+        toplam+=birlerBasamagi;
+        sayi/=10;
+
+
+
+       System.out.println(toplam);
+
+---------------------------------------------------------------------
+WrapperClass:(Bütün harfleri büyük yazdırma)
+
+  	String str="Java Çok Güzelmiş";
+	System.out.println(str.toUpperCase());
+
+	 ----------(short un max ve min değerlerini bulmak için)
+
+		System.out.println(Short.MIN_VALUE);//short un min alacağı değer
+        	System.out.println(Short.MAX_VALUE);//short un max alacağı değer
+
+
+ÖNEMLİ----ÖNEMLİ----ÖNEMLİ---String variableyi int'e çevirme---(WrapperClass)
+
+	
+        String sifre=12345;
+
+        Integer sifreSayi=Integer.parseInt(sifre);
+        System.out.println("Girilen şifre: "+sifre);
+        System.out.println("Integer sifre: "+sifreSayi);
+-----------------------------------------------------------------------------------
+Concantenation(String güçlüdür(Strongtur)):
+
+String str1="Java";
+        String str2="Guzeldir";
+        int sayi1=5;
+        int sayi2=4;
+
+        //Java Guzeldir 54    yazdırmak için;
+        System.out.println(str1+" "+str2+" "+sayi1+sayi2);
+
+        //Java Guzeldir 9    yazdırmak için;
+        System.out.println(str1+" "+str2+" "+(sayi1+sayi2));
+
+        //9 Java   yazdırmak için;
+        System.out.println(sayi1+sayi2+" "+str1);
+
+        //54 Guzeldir   yazdırmak için;
+        System.out.println(""+sayi1+sayi2+" "+str2);//burada en başdaki "" hiçliktir.
+
+        // JavaGuzeldir methodla yazdırmak için;
+        System.out.println( str1.concat(str2));
+
+        // Java Guzeldir methodla yazdırmak için;
+        System.out.println(str1.concat(" ").concat(str2));
+-----------------------------------------------------------------
+
+Relation Operators:(Karşılaştırma operatörleri)
+ 	System.out.println(5+2==7);//5+2 7'ye eşit mi? cevap:true
+        System.out.println(5*2==15);//5*2 15'e eşit mi? cevap:false
+	System.out.println(5+2!=7);//false
+        System.out.println(5*2!=5);//true
+	System.out.println(!(3*5>7));//false //sonucu tersine çevirir ÖNEMLİ!!!!!
+        System.out.println((3*5>7));//true
+
+	System.out.println((5+2==7)&&(4+3!=5));//5+2=7 ve 4+3,5'e eşit değil mi? cevap: true
+        System.out.println((5+2==2)&&(4+3!=5));//5+2=2 ve 4+3,5'e eşit değil mi? cevap: true
+
+	System.out.println((5+2==7)||(4+3!=5));//5+2=7 mi veya 4+3=5 değil mi? cevap:true
+        System.out.println((5+2==2)||(4+3!=5));//5+2=2 mi veya 4+3=5 değil mi? cevap:true
+
+----------------------------------------------------------------------------
+
+String ifadeyi eşitleme;
+
+String girilenGun="pazar";
+if (girilenGun.equals("pazar")||girilenGun.equals("cumartesi"))
+        {
+            System.out.println("Hafta sonu");
+        }
+
+------------------------------------------------------------------------------------
+
+EscapeSequences;(ÖNEMLİ INTERWİEV de  ÇIKMIŞ BİR SORUDUR)
+
+System.out.println("\"Zaruret\" insanı\n\'kaşif\' yapar\n\n\n\t\"TechProEd ile jaca çok kolay...\"");
+Yukarıdaki kodun ekran Çıktısı:
+"Zaruret" insanı
+'kaşif' yapar
+
+\"  (çift tırnak işareti)
+\'  (Tek Tırnak İşareti) 	
+\n  (Bir alt satıra iner)
+\t  (Bir tab boşluk bırakır)
+
+--------------------------------------------------------------------------------------------------
+String ile ilgili kodlar;
+
+
+charAt()=(Parantez içine girilen indexi olan veriryi döndürür)
+
+String str="java ögrenmek ne guzel";
+        System.out.println(str.charAt(0));//j çıktısını verir
+        System.out.println(str.toUpperCase().charAt(7));//R çıktısını verir
+--------------------------------------------------------
+
+
+toUpperCase(Locale.CANADA),toUpperCase(Locale.forLanguageTag("Tr"))=(variable. bu method yazılınca büyük yazar(Ülke dillerine görede seçim yapabiliriz) 
+
+String str="Beni psikopata baglamayin";
+        System.out.println(str.toUpperCase(Locale.CANADA)); //CANADA daki harflere göre büyültme (çıktısı:BENI PSIKOPATA BAGLAMAYIN)
+        System.out.println(str.toUpperCase(Locale.forLanguageTag("Tr")));//Türkiye deki harfler olmadığı için böyle yaptık(çıktısı:BENİ PSİKOPATA BAGLAMAYİN)
+--------------------------------------------------------
+
+
+Of()=variable.indexOf(aranacak veri) şeklinde yazılınca verinin 0 dan başlayarak sırasını sayar
+
+String str="Java ogrenmek cok guzel";
+
+        System.out.println(str.indexOf('g'));//6
+        System.out.println(str.indexOf("g"));//6
+indexOf()=Parantez içine girilen veriyi method olark değişkenin içinde arar varsa kaçıncı sırada olduğunu verir
+	  Baştan karakterleri saymaya SIFIR(0)'dan başlar
+
+--------------------------------------------------------
+
+indexOf() mehodunu başlangıç index belirtilip, oradan itibaren istenilen index aranabilir.
+
+String str="Java ogrenmek cok guzel";
+System.out.println(str.indexOf("g",7));//7 ıncı indexten itibaren g harfinin indexini bulur.ekrana 18 yazar.
+				     //indexOf("b",a) formatında yazılıncada a indexinden itibaren b sayısını bul indexini göster manası içerir.
+
+------------------------------------------------------
+
+lastIndexOf()==indexOf() komutunun aynı işlemini variablenin sonundan index sayar.
+		Bununlada variablede geçen bir ifadeyi hem baştan bakabildiğimiz gibi hem sondan bakarak birden fazla aranılan kelimenin olup olmadığı incelenebilir
+		ayrıntılar için;day11-c02
+
+String cumle = "Java cok kolay, Java cok guzel";
+String kelime= "Java";
+
+int kelimeIlkIndex = cumle.indexOf(kelime);
+   System.out.println(kelimeIlkIndex);//0 döndürür
+
+int kelimeSonIndex = cumle.lastIndexOf(kelime);
+   System.out.println(kelimeSonIndex);//16 döndürür
+
+----------------------------------------------------
+
+contains()=içermek/bir String de içinde geçen veriden arama yapmak için kullanılır.
+
+String str="Java ogrenmek cok guzel";
+System.out.println(str.contains("cok"));//true
+
+----------------------------------------------------
+
+endsWith()=Sondan itibaren String variablenin girilen veri içerip içermediğine bakar
+
+   String str="Ah be Java";
+
+   System.out.println(str.endsWith("be Java")); //true
+   System.out.println(str.endsWith(""));	//true
+
+    System.out.println(str.endsWith("Ah be Jav"));// endsWith komutu sondan baktığı için FALSE döndürdü
+    System.out.println(str.endsWith("Ah"));// endsWith komutu sondan baktığı için FALSE döndürdü
+	
+    System.out.println(str.endsWith("be java"));//büyük küçük harf duyarlı FALSE
+
+------------------------------------------------
+
+startsWith()=baştan itibaren variablenin veri içerip içermediğine bakar
+
+	  String input="Java gun gectikce guzellesiyor";
+
+	System.out.println(input.startsWith("J")); //TRUE
+        System.out.println(input.startsWith("Java gun gec"));//TRUE
+
+        System.out.println(input.startsWith("gun"));//FALSE
+
+startWith() komutunun başlangıcını da aşağıdaki kod da oluğu gibi ayarlayabiliyoruz.
+
+        System.out.println(input.startsWith("gun",5));//5 de dahil 5. indexten itibaren bak TRUE
+
+-----------------------------------------------------
+e
+isEmpty()= verilen değişkenin içinin boş olup olmadığına bakar. Boşsa TRUE - Doluysa FALSE döner.
+
+
+   
+        String input="Java cok guzel";
+        String input1="";
+        String input2=null;
+
+        System.out.println(input.isEmpty());// verilen değişkenin içinin boş olup olmadığına bakar//FALSE
+                                            //Boşsa TRUE - Doluysa FALSE döner
+        System.out.println(input1.isEmpty());//TRUE
+        System.out.println(input2.isEmpty());//NULL(hata verir)
+
+---------------------------------------------------
+
+replace()= Parantez içine ("Şuanki yazan","Yazması istenen") şeklinde girerek veri değişikliği yapılabilir.
+
+String str="Bu GUn Her Zama n ki gibi Cok GuZELLL";
+
+        System.out.println(str.replace("Zama n","Zaman"));//Bu GUn Her Zaman ki gibi Cok GuZELLL
+        System.out.println(str.replace("GuZELLL","Guzel"));//Bu GUn Her Zama n ki gibi Cok Guzel
+
+ System.out.println(str.replace("Zama n","Zaman").replace("Cok","Coooook").replace("GuZELLL","Guzel"));//Bu GUn Her Zaman ki gibi Coooook Guzel
+
+------------------------------------------------------
+
+replaceAll()=ilk çift tırnak içinde belirtileni ikincift tırnakdakiyle değiştirir. 
+
+ 	String str="Mustafa SAK Manisa Kirkagac Manisa";
+        System.out.println(str.replaceAll("Manisa","Izmir"));//bütün "Manisa" olanları Izmire çevirir/cıktısı:Mustafa SAK Izmir Kirkagac Izmir
+	
+\\w=>	System.out.println(str.replaceAll("\\w","*"))//Bütün harfleri * yapar//******* *** ****** ********
+
+\\W=>	String str2="23Mus+ta+fa SAK-- Man-isa Kirk--agac+-/";
+        System.out.println(str2.replaceAll("\\W",""));//harf ve rakamlar dışındaki herşeyi "" yapar//23MustafaSAKManisaKirkagac
+
+\\d=>	String str3="3423Mustafa SAK Manisa Kirkaga3c";//harfler dışındaki herşeyi "" yapar//Mustafa SAK Manisa Kirkagac
+        System.out.println(str3.replaceAll("\\d",""));
+
+\\D=>   String str4="3423Musta+fa SAK Mani+sa Kirkaga/+-3c";//Sadece RAKAMLAR kalır diğerlerini "" yapar
+        System.out.println(str3.replaceAll("\\D",""));
+
+\\s=>	String str5=" M U S T A F A     S A K";
+        System.out.println(str5.replaceAll("\\s",""));//bütün boşlukları siler/MUSTAFASAK
+
+
+\\S=>   String str6=" M U S T A F A     S A K";
+        System.out.println(str6.replaceAll("\\S",""));//boşluların dışındaki herşeyi "" yapar/ ekrançıktısı  
+        System.out.println("deneme");
+----------------------------------------------------------
+replaceFirst=> ilk belirtilen bölümü, yine belirttiğimiz hale çevirir. 
+
+ 	String str="Java ile hayat guzel";
+
+        System.out.println(str.replaceFirst("a","*"));//ilk a harfini * yapar.
+	System.out.println(str.replaceFirst("at","*"));//ilk at harfini * yapar/ Java ile hay* guzel
+	System.out.println(str.replaceFirst("\\s","_"));//Java_ile hayat guzel
+
+--------------------------------------------------------
+
+substring(_,_)=>ilkyazılan başlangıç dahil eder, ikinci yazılan son sınırı dahil etmez.
+NOT:Saymaya 0 dan başla!!!
+
+String isim="Suleyman";
+
+System.out.println(isim.substring(3));//çıktısı eyman
+System.out.println(isim.substring(2,4));//2.dahil-4.dahildeğil arasını verir //le
+System.out.println(isim.substring(0).replaceAll("\\w","*"));//ekran çıktısı ********
+
+--------------------------------
+isEmpty()
+
+String input2=null;
+String input1="";
+
+System.out.println(input1.isEmpty());//TRUE
+System.out.println(input2.isEmpty());//NULL
+
+------------------------------------
+replaceFirst()
+
+ String str="Java ile hayat guzel";
+ System.out.println(str.replaceFirst("a","*"));//ilk a harfini * yapar
+
+-------------------------------------------
+
+Array...
+
+Array'i sıralamak için;
+
+ int[] sayilar={6,5,4,1,3};
+        Arrays.sort(sayilar);//Aray'i siraladik . . .
+
+Yukaridaki Array'de arama yapmak için;(arama yapmak için önce sort ile sırala sonra binarySearch ile arama yap)
+
+System.out.println(Arrays.binarySearch(sayilar,4));//2 degeri döner
+System.out.println(Arrays.binarySearch(sayilar,-100));//-1
+
+-----------------------------------------------------------------------------
+
+Array...
+
+String bir metini istenilen yerlerden ayirmak için;
+
+ String str="Java ne kadar guzel";
+ String[] kelimeler=str.split(" ");//[Java, ne, kadar, guzel]
+ System.out.println(Arrays.toString(kelimeler));
+ String[] kelimelerE=str.split("e"); //[Java n,  kadar guz, l]
+ System.out.println(Arrays.toString(kelimelerE));
+	
+:::::::::::::::::::::::::::::::::::::::::::::::LAMBDA:::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+distinct()	 ===>>>> Bu kod tekrar edenleri süzdürmesini 1 defa yazdirmasini sagliyor.Parantez içine birşey yazmadik.
+
+filter(t->t%2==0)===>>>> bu kod parantez içindeki şartı sağlatıyor.Buradaki mesela  t çift ise işleme al demek
+
+map(t->t*t)	 ==>>>>> Bu kod listin elemani kareleri gibi deyince kullaniliyor.List elemanlarinda degisiklik yapılınca kullanılır.
+
+reduce(0,(t,u)->t+u)==>> t nin baslangic degeri olarak 0 atar u da daha onceki yazilan kodlardan gelen degerdir. Burada eklemeyi hep t ye yapar.Çarpmada baslangic degeri 1 alinir.
+reduce((t,u)->t+u).get()==>>Üstteki kodu bu sekilde baslangic degersiz de yazdirabiliriz.
+
+
+----------------------------------SORTED KOMUTLARİ---------------------------------------------
+
+sorted().findFirst().get()==>>sorted kücükten büyüge siralama yapar,findFirst ilk elemani alir,get() de döndürür.
+sorted(Comparator.reverseOrder())==>>Tersten siralama yapar.
+sorted(Comparator.comparing(t->t.toString().length()).reversed())===>>>lenght'e gore tersten sirlama kodu
+
+sorted(Comparator.comparing(String::length))==>>method referance ile kelime uzunluğuna gore siralar
+sorted(Comparator.comparing(String::length).reversed())==>>method referance ile kelime uzunluğuna gore tersten siralar
+sorted(Comparator.comparing(String::length).thenComparing(UtilsTekrar::ilkKarakter))==>>Stringi uzunlugunda gore sonra 
+ilk harfine göre siralar
+
+-----------------------------Bu metodlar boolean döndürür-------------------------------------------------------------------
+
+anyMatch() --> enaz bir eleman sarti saglarsa true aksi durumda false return eder.					    
+
+allMatch() --> tum  elemanlar sarti saglarsa true en az bir eleman sarti saglamazsa false return eder.
+ÖRNEK:::	allMatch(t -> t.length() <= 7) ?"List elemanlari 7 ve daha az harften olusmuş" :"Bazi elemanlar 7'den buyuk")
+
+noneMatch() --> hic bir sarti SAGLAMAZSA true en az bir eleman sarti SAGLARSA false return eder.
+ÖRNEK:::	list.stream().noneMatch(t->t.startsWith("X")||t.startsWith("x"));
+
+----------------------Eğer ... ise sil (removeIf())-------------------------------------------------
+
+uzunlugu 5 ten buyukse sil komutu:
+
+ list.removeIf(t->t.length()>5);
+        System.out.println(list);
+
+A veya a ile baslayan yada N veya n ile biten leri sil.
+
+list.removeIf(t->t.charAt(0)=='A'||t.charAt(0)=='a'||t.charAt(t.length()-1)=='N'||t.charAt(t.length()-1)=='n');
+        System.out.println(list);
+
+------------------------startWith() & endsWith() ---------------------------------
+
+list.removeIf(t->t.startsWith("A")||t.startsWith("a")||t.endsWith("N")||t.endsWith("n"));
+
+
+

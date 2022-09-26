@@ -1,0 +1,608 @@
+İLK BAGLANTI KODLARI:
+
+	System.setProperty("webdriver.chrome.driver","src/resources/drivers/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+----------------------------------------------------------------------------------------------------------
+
+SİTEYE GİTME KODU:
+ 	
+	driver.get("https://www.amazon.com/");
+
+----------------------------------------------------------------------------------------------------------
+SİTENİN BAŞLIĞINI YAZDIRMA KODU:
+
+            System.out.println("Actual Title : "+driver.getTitle()); // Gidilen sitenin başlığını yazdırır
+----------------------------------------------------------------------------------------------------------
+GİRİLEN SİTENİN URL'SiNİ GÖSTERİR:
+
+	   System.out.println("Actual Url "+driver.getCurrentUrl()); // Gidilen sayfanın Url'ini getirir
+----------------------------------------------------------------------------------------------------------
+GİRİLEN SİTENİN KAYNAK KODLARINI GÖSTERİR:
+
+	  System.out.println(driver.getPageSource());
+----------------------------------------------------------------------------------------------------------
+SAYFAYI MAXIMUM BOYUTA ULAŞTIRIR:
+
+         driver.manage().window().maximize();
+
+----------------------------------------------------------------------------------------------------------
+SAYFANIN KAYNAK KODLARINDA İSTENEN KELİME GEÇİP GEÇMEDİĞİNİ KONTROL ETMEK İÇİN:
+
+  Kaynak kodların içinde "Gateway" kelisinin olduğunu test ediniz...       
+        
+        if (driver.getPageSource().contains("Gateway")){
+            System.out.println("PageSourse testi PASSED");
+        }else System.out.println("PageSourse testi FAILED");
+
+----------------------------------------------------------------------------------------------------------
+SAYFAYI KAPATMA KODU:
+
+        driver.close(); // sayfayı kapatır
+
+----------------------------------------------------------------------------------------------------------
+BİRDEN FAZLA SAYFA VARSA HEPSİNİ KAPATMA KODU:
+	
+	driver.quit(); // birden fazla sayfa varsa hepsini kapatır
+
+----------------------------------------------------------------------------------------------------------
+SAYFANIN BAŞLIGININ BELİRTİLEN KELİME GEÇİP GEÇMEDİĞİNİ KONTROL ETMEK İÇİN:
+
+Başlığın "Amazon" içerdiğini test ediniz
+        
+        if (driver.getTitle().contains("Amazon")){
+            System.out.println("Title testi PASSED");
+        } else System.out.println("Title testi FAILED");
+
+----------------------------------------------------------------------------------------------------------
+
+URL'NİN BELİRTİLEN KELİMENİN İÇERİP İÇERMEDİĞİNİ KONTROL ETMEK İÇİN:
+
+Url'nin Amazon içerdiğini test ediniz
+       
+        if (driver.getCurrentUrl().contains("Amazon")){
+            System.out.println("Url testi PASSED");
+        }else System.out.println("Url testi FAILED");
+
+----------------------------------------------------------------------------------------------------------
+		::::::::::::NAVİGATE METHODLARİ::::::::::::
+
+driver.navigate().to("https://amazon.com"); //amazon sitesine gider, driver.navigate().to() methodu sayfada ileri geri yapıcaksak kullanılır
+driver.navigate().back(); // Bir önceki sayfaya geri döner.
+driver.navigate().forward(); // ilk sayfadan ileriye gider
+driver.navigate().refresh(); // sayfayı yeniler
+----------------------------------------------------------------------------------------------------------
+	::::::::::::::::::SAYFA KONUMU VE BOYUTU İLE İLGİLİ METHODLAR::::::::::::::::::::
+
+System.out.println("Pencere Konumu = " + driver.manage().window().getPosition());  //	Acilan browser'in konumunu verir
+System.out.println("Pencere Olculeri = " + driver.manage().window().getSize());    //	Acilan browser'in olculerini verir
+driver.manage().window().minimize();	//	Pencereyi simge durumuna getirir
+driver.manage().window().fullscreen();	//        Sayfayi fullscreen yapar
+
+driver.manage().window().setPosition(new Point(20,20));		//Sayfanın konumunu belirttiğimiz boyuta getirir.
+driver.manage().window().setSize(new Dimension(600,300));	//Sayfanın boyutunu belirttiğimiz boyuta getirir.
+		
+----------------------------------------------------------------------------------------------------------
+
+driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));//sayfa açılıncaya kadar max sn süresini test eder
+
+----------------------------------------------------------------------------------------------------------
+
+	::::::::::::::::GİRİLEN BİR SİTEDE "Nutella" ARAMASI YAPMA KODU:::::::::::::
+
+ID İLE ARAMA YAPMA==>>>
+
+NOT: Burdaki "twotabsearchtextbox" id'sini sitenin arama textbox'ında sağtık-->incele dedikten sonra çıkan kaynak kodundan aldık.
+     Önemli nokta bu id nin UNIQE olması lazım, bunu da CTL+F yapıp başka var mı diye kontrol ettik.
+
+Tek satırdaki hali= driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Nutella"+ Keys.ENTER);
+
+Variable atayarak yapılan hali : WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+        			 aramaKutusu.sendKeys("Nutella"+ Keys.ENTER);
+
+
+NAME İLE ARAMA==>>>
+
+        WebElement aramaKutusu = driver.findElement(By.name("field-keywords"));
+        aramaKutusu.sendKeys("Nutella"+ Keys.ENTER); // uniqe olduğu için sorunsuz çalışır
+
+
+CLASS NAME İLE ARAMA==>>>
+        
+        WebElement aramaKutusu = driver.findElement(By.className("nav-search-field "));
+        
+        Bu locatar çalismadı
+        Locatar alırken gözümüzden kaçan detaylar olabilir
+        aldığımız bir locatar çalışmazsa alternatif locatorlar denemeliyiz
+
+
+----------------------------------------------------------------------------------------------------------
+	:::::::::::::::::USER ID DOĞRULAMA İÇİN "isDisplayed()" KOMUTUNU KULLANMA::::::::::
+
+	WebElement expectedUser = driver.findElement(By.className("navbar-text"));
+
+        if (expectedUser.isDisplayed()){//isDisplayed boolean dondurur. Belirtilen element görünüp görünmedigini test eder
+            System.out.println("ExpectedUser Testi PASSED "+expectedUser.getText());
+        }else System.out.println("ExpectedUser Testi FAILED");
+         
+
+----------------------------------------------------------------------------------------------------------
+SAYFADAKİ LİNKLERDEN İSTEDİĞİMİZE TIKLAMA KODU:
+
+NOT:Buradaki önemli nokta tırnak içine yazılan yazı sitedki <a>...</a> tagi arasındaki yazıdır. Yine bunun UNİQE olmasına dikket edilmelidir
+
+  driver.findElement(By.partialLinkText("Click here to go to amazon.com.")).click(); // a tag'ındaki link isminden istediğimiz bir parçayla locate edebiliriz.Link ismi uzunsa birazini kopyalar bu formda kullaniriz.
+  driver.findElement(By.linkText("Sell products on Amazon")).click();//sitedeki tag: <a href="https://go.thehub-amazon.com/amazon-hub-locker" class="nav_a">Host an Amazon Hub</a>
+
+
+----------------------------------------------------------------------------------------------------------
+SAYFADAKİ(SİTEDEKİ) ELEMENTLER DEN BELİRTTİĞİMİZİ SAYMA:
+
+tag(<a></a>) için;
+	List<WebElement> tag = driver.findElements(By.tagName("a"));
+        System.out.println(tag.size());
+
+className(class) için;
+	List<WebElement> className = driver.findElements(By.className("card-flow-row-break"));
+        System.out.println(className.size());
+
+----------------------------------------------------------------------------------------------------------
+        :::::::::::::::::::SİTEDEİK BİR ELEMENTİN SAYFADAKİ KONUMUNU YAZDIRMA ( getLocation() )::::::::::::
+
+-ÖRNEK:Arama kutusunun konumunu yazdırın.
+
+  System.out.println("Arama Kutusunun Konumu = " 
+		    + driver.findElement(By.id("twotabsearchtextbox")).getLocation());
+
+NOT: Bu örnekte arama kutusunun sitedeki id'sine göre getLocation()' na baktık.
+
+------------------------------------------------------------------------------------------------------------
+	::::::::::::::::::ATTRIBUTE DEGERİNİ KONTROL ETME::::::::::::::::::::::
+
+    -Arama kutusunun name atributu'nun değerinin field-keywords olduğunu test ediniz
+
+	WebElement aramaKutusu=driver.findElement(By.id("twotabsearchtextbox"));
+
+        if (aramaKutusu.getAttribute("name").equals("field-keywords")) {
+            System.out.println("Atribute TESTI PASSED");
+        }else System.out.println("Atribute TESTI FAILED");
+
+------------------------------------------------------------------------------------------------------------
+	:::::::::::::::::::::TAGNAME DEGERİNİ KONTROL ETME::::::::::::::::::::::::
+
+-Arama kutusunun tagName'inin input olduğunu test ediniz
+
+        WebElement aramaKutusu=driver.findElement(By.id("twotabsearchtextbox"));
+
+        if (aramaKutusu.getTagName().equals("input")) {
+            System.out.println("TagName Testi PASSED");
+        }else System.out.println("TagName Testi FAILED");
+
+------------------------------------------------------------------------------------------------------------
+
+ //amazonda arama yaptıktan sonra sol üst tarafta"1-16 of 109 results for "city bike"" diye yazan String'i split ile
+          // arraye ekledik ve onun istedigimiz elementini yazdirdik
+        System.out.println("Arama sonucu : "+aramaSonucu[0]); //Arama sonucu : 1-16
+        System.out.println("Arama sonucu : "+aramaSonucu[1]); //Arama sonucu : of
+        System.out.println("Arama sonucu : "+aramaSonucu[2]); //Arama sonucu : 109
+
+-------------------------------------------------------------------------------------------------------------
+		:::::::::::::::::::::::::::RELATIVELOCATORS:::::::::::::::::::::::::::
+
+//mountie'yi secerken london'un altında, amsterdam'ın saginda diyerek elementimizi seçtiriyoruz
+
+
+ 	WebElement london = driver.findElement(By.id("pid5_thumb"));
+        WebElement amsterdam = driver.findElement(By.id("pid9_thumb"));
+
+        WebElement mountie = driver.findElement(RelativeLocator.with(By.tagName("img")).below(london).toRightOf(amsterdam));
+        mountie.click(); 
+
+------------------------------------------------------------------------------------------------------------------------
+					:::::::::::::::::xpath:::::::::::::
+
+1-)  <a href="http://automationpractice.com/" title="My Store">
+     <img class="logo img-responsive" src="http://automationpractice.com/img/logo.jpg" alt="My Store" width="350" height="99"></a>
+
+xpath ==>>//a/img[@class='logo img-responsive']    (Her tag içinde tekrar slash koyarak yapabiliriz, fakat aşagidaki daha kolay)
+	  //a/img[@*='logo img-responsive']		
+	  //a/*[@class='logo img-responsive']
+
+2-)     <a class="a-size-base a-link-normal" target="_blank" rel="noopener" 
+	href="/gp/redirect.html?_encoding=UTF8&amp;location=https%3A%2F%2Fwww.amazon.com.tr%2F%3Fref%3Daisgw_intl_stripe_tr&amp;
+        source=standards&amp;token=3DDF36D7AAEA6B1C65BD38199D75EE9002579A76">Click here to go to amazon.com.tr</a>
+ 
+TEXT'den xpath almak için : //*[text()='Click here to go to amazon.com.tr']
+rel'den xpath almak için :  //*[@rel='noopener']
+class'dan xpath almak için : //*[@class='a-size-base a-link-normal']
+
+------------------------------------------------------------------------------------------------------------------------
+					::::::::::@Before/@After:::::::::
+
+NOT:@Before/@After ile @BeforeClass/@AfterClass arasındaki farklar;
+------------------------------------------------------------------
+@Before/@After			=>'WebDriver driver' class seviyesinde bu şekilde tanımlanır.
+---------------------------------  @Before/@After methodlara static TANIMLANMAZ...
+Çalışma Şekli-->>Her yazılan @Test methodunda @Before/@After çalışır.Yani @Test methodunda kendi de dahil 3 method çalışır.
+
+@BeforeClass/@AfterClass	=>'static WebDriver driver' class seviyesinde bu şekilde tanımlanır.
+---------------------------------  @BeforeClass/@AfterClass methodları static TANIMLANIR...
+Çalışma Şekli-->>İlk @BeforeClass methodu çalışır, sonra bütün @Test methodları çalıştırır enson @AfterClass methodu çalışır.
+
+public class C02_BeforeAfter {
+ WebDriver driver; //driver objesini class seviyesinde tanimliyoruz
+    @Before        		//Test başlarken ilk bu methodun içindekiler çalışır, o yüzden başlangıçtaki kodlar 
+    public void setup(){	//buraya yazılır
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+    @After			//Test bitiminde bu methoddaki kodlar çalışır.
+    public void tearDown(){
+        driver.close();
+    }
+    @Test			//Bu method test için yazılmıştır, bu methoddan önce @Before methodu çalışır ve test bittiğinde
+    public void method1(){	//@After methodunu çalıştırır. Yani bir @Test methodu için kendi de dahil 3 method çalışır.
+        //1 defa before methodu calisir
+
+        driver.get("https://amazon.com");
+
+        //1 defa after methodu calisir
+        //Toplamda burada kendisiyle birlikte 3 defa method calisir
+    }
+    @Test
+    public void method2(){	//Sıra bu methoda geldiğinde en baştan @Before methodu çalışır ve kapanan Chrome açılır, sonra
+        driver.get("https://techproeducation.com");//bu @Test methodu çalıştırılır ve en son @After methodu ile Chrome kapatılır
+    }
+    @Test		    //Sıra bu methoda geldiğinde en baştan @Before methodu çalışır ve kapanan Chrome açılır, sonra
+    public void method3(){    //bu @Test methodu çalıştırılır ve en son @After methodu ile Chrome kapatılır
+
+        driver.get("https://hepsiburada.com");
+    } 
+}
+
+				::::::::@BeforeClass/@AfterClass:::::::
+
+NOT:@Before/@After ile @BeforeClass/@AfterClass arasındaki farklar
+@Before/@After			=>'WebDriver driver' class seviyesinde bu şekilde tanımlanır.
+				  @Before/@After methodlara static TANIMLANMAZ...
+Çalışma Şekli-->>Her yazılan @Test methodunda @Before/@After çalışır.Yani @Test methodunda kendi de dahil 3 method çalışır.
+
+@BeforeClass/@AfterClass	=>'static WebDriver driver' class seviyesinde bu şekilde tanımlanır.
+				  @BeforeClass/@AfterClass methodları static TANIMLANIR...
+
+public class C03_BeforeClassAfterClass {
+    /*
+    BeforeClass ve AfterClass notasyonları kullanıyorsak olusturacagimiz methodu'u static yapmamiz gerekiyor.
+     */
+    static WebDriver driver;
+    @BeforeClass
+    public static void beforeClass(){
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+    }
+    @AfterClass
+    public static void tearDown(){
+        driver.close();
+    }
+    @Test
+    public void method1(){
+        driver.get("https://amazon.com");
+    }
+    @Test
+    public void method2(){
+        driver.get("https://techproeducation.com");
+    }
+    @Test
+    public void method3(){
+        driver.get("https://hepsiburada.com");
+    }
+
+------------------------------------------------------------------------------------------------------------------------
+				::::::::::::::::::::::ASERTIONS:::::::::::::::::::::::
+1- Assert.assertTrue():(Parantez içinde bahsedilen şart olursa Tast PASSED olur değilse FAILED olur)
+
+ //  - url'in "amazon" icergini test et
+        String expecteURL = "amazon";
+        String actualUrl = driver.getCurrentUrl();
+        Assert.assertTrue(actualUrl.contains(expecteURL));
+
+2- Assert.assertFalse():(Parantez içinde bahsedilen şart olmazsa Tast PASSED olur, değilse FAILED olur)
+
+ //  -  title'in "facebook" icermedigini test et
+        String expecteURL = "facebook";
+        String actualUrl = driver.getCurrentUrl();
+        Assert.assertFalse(actualUrl.contains(expecteURL));
+
+3- Assert.assertEquals():(İki şey eşitse mi kontrol eder)
+ // - url'in "https://www.facebook.com" icergini test et
+        String expecteURL = "https://www.facebook.com";
+        String actualUrl = driver.getCurrentUrl();
+        Assert.assertEquals("URL'ler eşit degilse",actualUrl,expecteURL);
+
+4- Assert.assertNotEquals("URL'ler eşit degilse",actualUrl,expecteURL);
+// - url'in "https://www.facebook.com" icergini test et
+        String expecteURL = "https://www.facebook.com";
+        String actualUrl = driver.getCurrentUrl();
+        Assert.assertEquals("URL'ler eşit degilse",actualUrl,expecteURL);
+
+------------------------------------------------------------------------------------------------------------------------
+			::::::::::::DROPDOWN KOMUTLARI(comboBox)::::::::::::
+
+ 	WebElement ddm = driver.findElement(By.xpath("//*[@id='searchDropdownBox']"));//Buradaki xpath dropdown'inkidir.
+ 	Select select = new Select(ddm);			//Eger select objesi baska testlerde olusturcaksak class' da olustur.
+ÖNEMLİ: List<WebElement> ddmList = select.getOptions(); //  getOptions() methodu ile List'in içine atmaya yariyor
+	System.out.println(ddmList.size());
+
++++++Yukarıdaki seçtigimiz dropdown'da "Books" diye element vardır ve onun var oldugunu kontrol etmek için;
+
+select.selectByVisibleText("Books");                              //text'i direk yazarak bulma yöntemi
+select.selectByIndex(5);                                          //Books'un index nosuna göre bulma(index 0 dan basliyor)
+select.selectByValue("search-alias=stripbooks-intl-ship");        //value degerine gore Books'u sectirme yöntemi
+
+//Secilen Optionu Yazdırmak için:  (select.getFirstSelectedOption().getText())
+	System.out.println("DropDown'dan Secilen Element(option) : "+select.getFirstSelectedOption().getText());
+
+------------------------------------------------------------------------------------------------------------------------
+
+		::::::::::::::::::::::::ALERT(Siteye girdiğimizde çıkan Uyarı):::::::::::::::::::::::::::::::
+
+bir web sitesine girdigimizde karsımıza bir uyarı mesajı yada bir buttona tıkladığımızda bir uyarı cıkabilir
+eğer bu uyarıya incele(mause sağ-tik inspect) yapabiliyorsak bu tür alert lere html alert denir.
+ve istedigimiz locate'i alabiliriz. Ama gelen uyarı kutusuna müdahale (sağ tik inspect ile) edemiyorsak
+bu tür alertlere  js alert denir.
+
+	driver.switchTo().alert().accept();   //Çıkan allert uyarısını kabul eder
+        driver.switchTo().alert().dismiss();    //İptal butonuna tıklar
+		
+	driver.switchTo().alert().getText(); //Alert Mesajının text'ini alır.
+
+	driver.switchTo().alert().sendKeys("METİNİN YAZILACAK YER"); //Alert bizden bir metin istiyorsa bu kod kullanılır.
+
+--------------------
+BasicAuthentication : Siteye gridiğimizde 'Kullanıcı adı','Şifre' uyarı penceresi açılıyorsa;
+--------------------			
+
+Html komutu Kullanımı  : https://username:password@URL
+Username  	       : admin
+password   	       : admin
+
+Örnek URL : https://the-internet.herokuapp.com/basic_auth
+Username    : admin
+password    : admin
+		
+Uygulanmış hali : https://admin:admin@the-internet.herokuapp.com/basic_auth
+
+------------------------------------------------------------------------------------------------------------------------
+
+			::::::::::::::::::::::::IFRAME(iframe):::::::::::::::::::::::::::::::::
+
+iframe içinde bulunan bir videoyu açmak için ;
+
+	driver.get("https://html.com/tags/iframe/"); 							 //sitesindeki videoyu izlemek için siteye gittik        
+        List<WebElement> iframeList = new ArrayList<>(driver.findElements(By.xpath("//iframe")));	 // Butun iframe'leri liste attık
+        driver.switchTo().frame(iframeList.get(0));				//driver.switchTo().frame() komuto ile parantez içine belirtilen iframeye girdik
+        driver.findElement(By.xpath("//*[@aria-label='Oynat']")).click();	//En sonda videonun butonunu locate edip click yaptık. Şuan video başlaması gereklidir.
+
+Önemli Not: Tekrar bu testin altına ana sayfada bulunan bir element ile iş yapmaya devam etmek istersek bunun için önce ana sayfa frame'sine dönmemiz gereklidir.
+	 
+	driver.switchTo().defaultContent(); //ana sayfa(en üstteki) frame'sine döner.
+	driver.switchTo().parentFrame();    //bir üst frameye döner.
+
+iframe içinde bir textBox'a yazı yazabilmek için;
+
+	WebElement iframeElementi = driver.findElement(By.id("mce_0_ifr")); //iframenin id si
+        driver.switchTo().frame(iframeElementi);    //üst satıda locate ettigimiz(iframeElementi) frameye gider
+
+        WebElement textKutusu = driver.findElement(By.xpath("//*[@id='tinymce']")); //textbox in idsi, By.xpath() ile yazdırdık
+        textKutusu.clear();         // textbox 'u silmeyince var olan yazının yanına yazıyor.
+        textKutusu.sendKeys("Merhaba Dünya");		//textBox ' a "Merhaba Dünya" yazdırdık
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::: Window Handle :::::::::::::::::::::::::::
+
+  Açıklama: Açılan pencereyi handle edip tekrar geri aynı pencereye dönmek için kullanırız.
+  
+KULLANIMI: Siteye giriş(driver.get()) kodundan hemen sonra;
+							   String variableAdi = driver.getWindowHandle();
+	   Handle edilen siteye dönme kodu;
+				           driver.switchTo().window(variableAdi);
+		:::::::::::::::::::SAYFAYI TAB'da(Yeni Sekmede) ve FARKLI PENCEREDE AÇMAK İÇİN::::::::::::::::::
+
+!!!!Açılacak siteye girmeden önce yaz!!!!
+
+		        driver.switchTo().newWindow(WindowType.TAB); 	 //Tabda açar
+		        driver.switchTo().newWindow(WindowType.WINDOW);  //Yeni pencerede açar
+      
+
+------------------------------------------------------------------------------------------------------------------------
+	::::::::::::::::::::::::::::ACTIONS(Mouse/Klavye hareketleri):::::::::::::::::::::::::::
+
+	*** Actions action=new Actions(driver); *** //Her işlemden önce 1 kere olarak bu objenin tanımlanması gerekir
+
+-------------------MOUSE HAREKETLERİ------------------
+
+-------- MOUSE ile Üzerine geldiğimiz bir elemtin TIKLAMADAN açılmasını sağlamak için; (action.moveToElement(elementinLocatesi).perform();)
+
+	
+ +   WebElement accounLink=driver.findElement(By.xpath("//*[text()='Account & Lists']")); //üzerine gelecek elementi locate ettik
+ +  action.moveToElement(accounLink).perform();//mouseyi parantez içinde belirtilen elementin üzerinde tutar
+        //action objesi kullanilarak baslayan her komut, calismak icin perform( )bekler.
+
+-------- MOUSE ile SAĞ TIKLAMAK için;
+
+ +   WebElement cizgiliAlan = driver.findElement(By.xpath("//*[@id='hot-spot']")); //Sağ tıklayacağımız element locate ettik
+ +   actions.contextClick(cizgiliAlan).perform();    		//  SAĞ TIKLAMA KODU	
+
+-------- MOUSE ile bir yere elementi SÜRÜKLEME;
+ 
+ + WebElement suruklenecekElement = driver.findElement(By.xpath("//*[@id='draggable']"));
+   WebElement uzerineBirakilacakElement = driver.findElement(By.xpath("(//*[@id='droppable'])[1]"));
+ +  actions.dragAndDrop(suruklenecekElement ,uzerineBirakilacakElement).perform();
+
+-------------------KLAVYE HAREKETLERİ------------------
+
+	*** Actions action=new Actions(driver); *** //Her işlemden önce 1 kere olarak bu objenin tanımlanması gerekir
+
+-------- SHIFT Tuşuna basarak yazı yazdırmak için;
+ 
+ + WebElement searchTextBox = driver.findElement(By.id("twotabsearchtextbox"));//Yazdırılacak olan element (mesela textBox) locate edilir
+ + actions.click(searchTextBox);			// actions'su yazdıracak oldugumuz textbox'a locate et
+ + actions.sendKeys("sam").
+	   keyDown(Keys.SHIFT).sendKeys("a").sendKeys("b").
+	   keyUp(Keys.SHIFT).sendKeys("t").perform();		//samABt yazdırır.
+
+-------- TAB Tuşuna basarak elemet değiştirmek için;(FACEBOOK KAYIT FORMU ÜZERİNDEN YAPILMIŞTIR.)
+
++Örneğin Bir form olsun, içinde ad-soyad-doğumtarihi... birsürü bilgi için textbox olsun ; en baştaki textboxi locate ediyoruz,
+	digerlerine tab ile geçiş yapıyoruz. 
+
+KODLARI :  WebElement textBoxName = driver.findElement(By.xpath("//*[@name='firstname']")); //en başdaki textboxi locate et
+	   Actions actions = new Actions(driver);				//actions objesi tanımla
+           actions.click(textBoxName);   					//textboxi actionsa ata
+	   textBoxName.sendKeys("Mustafa");					//ilk textboxa Mustafa yazdırır
+           actions.sendKeys(Keys.TAB).sendKeys("Sak").				//Tab tuşuna basar diğer textboxa geçer
+           sendKeys("12345678976").sendKeys(Keys.TAB).
+	   sendKeys("sifre123").sendKeys(Keys.TAB).sendKeys(Keys.TAB).	
+	   sendKeys("7").sendKeys(Keys.TAB).
+	   sendKeys("Ağustos").sendKeys(Keys.TAB).
+	   sendKeys("1993").sendKeys(Keys.TAB).sendKeys(Keys.TAB).
+	   sendKeys(Keys.RIGHT).					//RadioButonlarda bir sağa kaymak için kullanılır.
+	   sendKeys(Keys.TAB).sendKeys(Keys.TAB).
+	   sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.TAB).perform();
+
+-------- YÖN TUŞLARINA BASMA(Aşağı/yukarı)(sendKeys(Keys.PAGE_DOWN)---sendKeys(Keys.PAGE_UP))
+
+ NOT: Sayfa da bazı elementleri görmemiz için aşağı yukarı yapmak gerekir bunun için;
+	
+	 Actions actions = new Actions(driver);
+        actions.sendKeys(Keys.PAGE_DOWN).perform();//sayfaya bir miktar aşagiya indirir.
+
+------------------------------------------------------------------------------------------------------------------------
+	:::::::::::::::::::::::::::::::::Siteye dosya yükleme(File Upload):::::::::::::::::::::::::::::::::::::: 
+
+        WebElement chooseFile = driver.findElement(By.xpath("//*[@id='file-upload']"));//dosya yükleme butonunu locate ettik
+        String dosyaYolu = "C:\\Users\\myComputer\\Downloads\\test.txt";               //yüklenecek dosya yolunu locate ettik
+        chooseFile.sendKeys(dosyaYolu);  					       //butona dosya yolunu sendKeys yaptık
+
+
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::::::.COOKIES(ÇEREZLER):::::::::::::::::::::::::::::::::::::::::
+
+NOT: Kodlarda geçen variablelerin değerlerini anlamak için kodun hepsine baştan itibaren bak.
+
++        Set<Cookie> tumCookie = driver.manage().getCookies();		//    tum cookie’leri SET'e atar.
++        Cookie Yazdırmak için;
+				int sayac=1;
+				for (Cookie w:tumCookie) {
+				System.out.println(sayac+". cookie = " + w);
+				System.out.println(sayac+". name = " + w.getName());
+				System.out.println(sayac+". value = " + w.getValue());
+				sayac++;		}
+
++	Cookies içinden herhangi bir cookie aratmak için;
+				 for (Cookie e:tumCookie) {
+            			 if (e.getName().equals("i18n-prefs")){		//i18n-prefs isimli cookie içeriyor mu?
+                			Assert.assertEquals("USD",e.getValue());
+            			 }  }
+
++	Yeni cookie eklemek için;
+				  Cookie yeniCookie = new Cookie("Yeni Cookie adi girilir","Cookie değeri girilir");
+		                  driver.manage().addCookie(yeniCookie);    //variableye atanan cookie, cookies'e ekler
+                                  tumCookie=driver.manage().getCookies();  //tumCookie en başta bütün çerezleri içine koydugumuz Set'tir.
+									    //tekrar SET'e buradaki atama yapmak gereklidir.
+
+
++	Yeni eklenen cookie'yi eklendiğini kontrol etmek için;
+					//tumCookie en başta bütün çerezleri içine koydugumuz Set'tir.	
+				 Assert.assertTrue(tumCookie.contains(yeniCookie));
+
++	Tüm Cookies'leri silmek için;
+				 driver.manage().deleteAllCookies();          //tüm cookie siler
+			         tumCookie = driver.manage().getCookies();    //Set'e tekar assign yapma kodu	
+			         Assert.assertTrue(tumCookie.isEmpty());      // isEmpty() ile Set'in içinin dolu/boş oldugunu kontrol eder
+		
+				  
+------------------------------------------------------------------------------------------------------------------------
+			:::::::::::::::::::::::::WEBTABLES:::::::::::::::::::::::::::::
+
+    AÇIKLAMA: Sitedeki tabledeki veriyi çekmek için;
+
+	 //    Tüm table body’sinin boyutunu(sutun sayisi) bulun:
+
+	List<WebElement> sutunsayisi = driver.findElements(By.xpath("//thead//tr//th"));
+        System.out.println("Sutun sayisi = " + sutunsayisi.size());
+
+        //    Tablede Tüm bodyi yazdırmak için ;
+
+        WebElement tumBody = driver.findElement(By.xpath("//body"));
+        System.out.print(tumBody.getText());
+
+	//	Tablede Tüm başlıkları yazdirmak için;
+
+        WebElement basliklar = driver.findElement(By.xpath("//thead//tr"));
+        System.out.println("Basliklar : "+basliklar.getText());
+
+ 	//    table body’sinde bulunan toplam satir(row) sayısını bulun.
+
+        List<WebElement> satirlarListesi = driver.findElements(By.xpath("//tbody//tr")); // Slaşlarin ikitane olma sebebi; 1 tane olursa tbody altındaki childlara bakar,
+        System.out.println("Toplam Satır Sayısı : "+satirlarListesi.size());            //fakat "//tbody/td" şeklinde yazarsak sadece tbody altındaki td'leri alır ,
+        								                //"//tbody//td" şeklinde yazarsak tbody altındaki bütün td'leri alır
+
+	//    Table body’sinde bulunan satirlari(rows) konsolda yazdırın.
+
+	 for (WebElement each:satirlarListesi) 
+		{
+            System.out.println(each.getText());
+       		 }
+
+	//  4.satirdaki(row) elementleri konsolda yazdırın.
+
+ 	List<WebElement> cellList = driver.findElements(By.xpath("//tbody//tr[4]//td"));
+        for (WebElement each:cellList) {
+            System.out.println(each.getText());
+        }
+
+	//   IDHOTEL baslıgındaki tum elementleri(sutunları) konsola yazdırın
+
+	List<WebElement> idHotelListesi = driver.findElements(By.xpath("//tbody//td[2]"));
+        for (WebElement e:idHotelListesi) {
+            System.out.println(e.getText());
+        }
+
+	//input olarak verilen satır sayısı ve sutun sayısına sahip cell'deki text'i yazdıralım
+
+	int satir=3;
+        int sutun=3;
+
+        WebElement aranaCell= driver.findElement(By.xpath("//tbody//tr["+satir+"]//td["+sutun+"]"));
+        System.out.println(aranaCell.getText());
+
+
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::::EXCEL DOSYASI OKUTMA:::::::::::::::::::::::::::::::::
+
+	1. YÖNTEM :
+	        String dosyaYolu= "src/resources/ulkeler.xlsx";       //resources package'na attığımız exceli yolunu atadık
+       	        FileInputStream fis =new FileInputStream(dosyaYolu);  //FileInputStream objesi olusturup,parametre olarak dosya yolunu gir
+        	Workbook workbook = WorkbookFactory.create(fis);      //Workbook objesi olusturalim,parameter olarak fileInputStream objesini gir
+		Sheet sheet = workbook.getSheet("Sayfa1")	      //excelde kullanılacak olan sayfanin adi yazilir
+		Row row =sheet.getRow(3);			       //Sayfa1 deki 3. satırı bu şekilde seceriz	
+		Cell cell=row.getCell(3);			      //hücre secimi bu sekilde yapılır	
+		System.out.println(cell);
+
+	2. YÖNTEM(Kolay diye bahsedilen bu) :
+                String dosyaYolu= "src/resources/ulkeler.xlsx";      //- Dosya yolunu bir String degiskene atayalim
+	        FileInputStream fis =new FileInputStream(dosyaYolu);  //FileInputStream objesi olusturup,parametre olarak dosya yolunu gir
+                Workbook workbook = WorkbookFactory.create(fis);     //- Workbook objesi olusturalim,parameter olarak fileInputStream objesini girelim
+								     //- WorkbookFactory.create(fileInputStream)
+ 		String actualData=workbook.getSheet("Sayfa1").
+                    getRow(3).
+                    getCell(3).
+                    toString();
+            System.out.println(actualData);
+
+---------------------		
+++Excel'de Toplam satır sayısını öğrenmek için;   int sonSatir = workbook.getSheet("Sayfa1").getLastRowNum();
+

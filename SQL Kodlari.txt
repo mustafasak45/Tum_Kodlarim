@@ -1,0 +1,682 @@
+
+
+CREATE DATABASE database_Adi  //database oluşturur.
+
+-----------------------------------------------------------
+
+CREATE table ogrenci(
+ogr_no int,
+ogr_isim VARCHAR(30),	
+notlar REAL,
+yas int,	
+adres VARCHAR(50),	
+kayit_tarih DATE	
+);
+-------------------------------------------------------------------
+--DROP TABLE tablo_adi
+--DROP DATABASE database_adi
+
+Belirtilen tablo veya databaseyi tamamen siler.
+
+NOT:Parent tablo 'Drop table tablo_adi' koduyla silinmez. Ama kodun sonuna 'CASCADE' eklersek siler
+KULLANIMI: DROP TABLE tablo_adi CASCADE
+
+---------------------------------------------------------------------
+--Varolan tablodan yeni bir tablo olusturma:
+
+CREATE table yeni_Olusturulacak_Tablo_Adi
+AS
+SELECT ornek_alinacak_tablodan_fieldlarin_adlari_aralarinda_virgülle_yaz FROM ornek_alinacak_tablo;
+
+------------------------------------------------------------------------
+-- DML --> Data Manupulation Lang.
+
+--(INSERT) Tabloya Veri Eklme:: 
+
+--id(int),st_name(varchar(30)),age(int) fieldlarina sirayla 1001, Ali Can,25 ekleyin,
+INSERT into Tablo_Adi VALUES ('1001','Ali Can',25);
+
+--(INSERT INTO) Parcalı veri ekleme::
+
+insert into student(st_name,age) VALUES ('Mustafa CAN',65);
+
+Aciklamasi:student tablosunda "id,st_name,age" fieldlari var, biz sadece "st_name,age" fieldlarina
+veri ekledik.
+-------------------------------------------------------------------------
+-- DML --> Data Manupulation Lang.
+
+
+--(UPDATE)Tabloyu Güncelleme::
+
+Taplonun içinde kullanılır
+
+Tablo Adi:student
+fieldler: age,st_name,st_name
+
+Butun age fieldlarini 85 yapın.
+Update student SET age=85;
+
+--İsmi Veli Can olanlari age yi 70 yapın
+update student set age=70 where st_name='Ali Can';
+
+--age 85 ve id 1002 olanların st_namesini Mustafa yap
+UPDATE student SET age=85 AND id=1002 WHERE st_name='Mustafa';
+
+--------Başka tablodan verilerden faydalanarak UPDATE yapma----
+
+1.SORU:(BASİT HALİ)	urunler tablosundan Ali Bak’in aldigi urunun ismini 'Apple' yapın.							
+								
+CEVAP:	UPDATE urunler							
+	SET urun_isim='Apple'							
+	WHERE musteri_isim='Ali Bak';							
+								
+2.SORU:(KOMPLEKS HALİ)	urunler tablosundan Ali Bak’in aldigi urunun ismini, tedarikci  tablosunda irtibat_ismi 							
+	-- 'Adam Eve' olan firmanın ismi (firma_ismi) ile degistiriniz.							
+								
+CEVAP:		UPDATE urunler                  						
+		SET urun_isim = (SELECT firma_ismi from tedarikciler WHERE irtibat_ismi = 'Adam Eve')                   						
+		WHERE musteri_isim = 'Ali Bak';  						
+								
+AÇIKLAMA:2. soruda; urunler tablosunda değişiklik yapılması isteniyor,
+		    değiklik yapma kriteri de musteri_isim='Ali Bak' olan,
+		    değişiklik yapılacak yer urun_isim,
+		    yapılacak değişiklikte; tedarikciler tablosundaki 'Adam Eve'nin firma ismi ile aynı yapılmasidir(SET)
+
+-------------------------------------------------------------------------
+-- DML --> Data Manupulation Lang.
+
+--(DELETE)
+
+--Tablodaki bütün kayıtları silin.
+
+DELETE From tablo_adi;
+
+----student tablosundaki st_name fieldinde Veli Can olanlari silin
+DELETE FROM student WHERE st_name='Veli Can';
+
+--(TRUNCATE)
+Delete gibi tablo içerigini siler. Fakat kosullu silme yapmazzz, sadece alttaki kod olarak kullanılır
+
+TRUNCATE TABLE tablo_adi;
+
+----------------------------------------SELECT KOMUTLARI-----------------------------
+--DQL -->Data Query Lang.
+
+--(SELECT)  Tablo Cağırma:: 
+
+SELECT * FROM tablo_adi;
+
+--student tablosundan age 35 den buyuk olanları cagırın
+select * from student where age>35;
+
+--student tablosundan farklı ulkelerde tum degerleri secin
+select distinct ulke student
+
+
+--------BETWEEN KOŞULU-------
+
+:::SORU:::id'si 1003 ile 1005 arasında olan personel bilgisini listeleyiniz
+	SELECT * FROM personel WHERE id BETWEEN '1003' AND '1005';
+	select * from personel where id>='1003' and id<='1005';  --bu şekilde de çözülebilir
+
+:::SORU:::id'si 1003 ile 1005 arasında olmadığı personel bilgisini listeleyiniz
+	SELECT * FROM personel WHERE id NOT BETWEEN '1003' AND '1005';
+
+--------WHERE KOŞULU------------
+
+:::SORU:::Ismi a harfi ile baslayan personeli listele
+	select * from personel where isim like 'A%';
+
+:::SORU:::Ismi t harfi ile biten personeli listele
+	select * from personel where isim like '%t';
+
+:::SORU:::Isminin ikinci harfi e olan personeli listeleyiniz
+	select * from personel where isim like '_e%';
+
+:::SORU:::Isminin 3.harfi r olan personeli listeleyiniz
+	select * from personel Where isim LIKE '__r%';
+
+-------------------------------------------------------------------------------------------------------
+----------------------------------IS NULL/IS NOT NULL/COALESCE ----------------------------------------
+
+IS NULL ve IS NOT NULL, Boolean operatorleridir. Bİr ifadenin NULL olup olmadığını kontrol eder
+COALESCE (Birleştirme) ise bir fonksiyondur ve içerisindeki parametrelerden NULL olmayan ilk ifadeyi döndürür,
+birden fazla şartlarda kullanılır
+
+--insanlar tablosundan 'isim' null olanlari getirin
+select * from insanlar where isim is null
+
+--insanlar tablosundan 'isim' null olmayanları listeleyelim
+select * from insanlar WHERE isim is not null
+
+-- isim 'i NULL olan kişilerin isim'ine NO NAME atayınız.
+update insanlar
+set isim='NO NAME'
+where isim is null
+
+----COALESCE----
+
+/* 
+isim 'i NULL olanlara 'Henuz isim girilmedi'
+adres 'i NULL olanlara 'Henuz adres girilmedi'
+ssn 'i NULL olanlara ' no ssn' atayalım.
+*/
+
+update insanlar
+set isim= coalesce (isim,'HENUZ ISIM GIRILMEDI'),
+    adres=coalesce (adres,'HENUZ ADRES GIRILMEDI'),
+	ssn=coalesce (ssn,'NO SSN');
+
+
+-------------------------LIKE(~~)/ILIKE(~~*)/NOT LIKE(!~~)/NOT ILIKE(!~~*)----------------------------
+% --> 0 veya daha fazla karakteri belirtir.
+_ --> Tek bir karakteri belirtir
+
+--Ismi a harfi ile baslayan personeli listele
+select * from personel where isim like 'A%';
+
+--Ismi t harfi ile biten personeli listele
+select * from personel where isim like '%t';
+
+--Isminin ikinci harfi e olan personeli listeleyiniz
+select * from personel where isim like '_e%';
+
+-- Soru9 :Isminin 3.harfi r olan personeli listeleyiniz
+select * from personel Where isim LIKE '__r%';
+
+-- 'a' ile başlayıp 'n' ile biten personel isimlerini listeleyiniz
+select * from personel where isim ~~* 'a%n'; 
+
+-- ikinci karakteri 'a' ve dördüncü karakteri 'u' olan personel isimlerini listeleyiniz
+select * from personel where isim ~~ '_a_u%';
+
+-- İçinde 'e' ve 'r' bulunan personel isimlerini listeleyiniz
+select * from personel where isim Ilike'%e%' and isim Ilike '%r%';
+
+-- 2. harfi e olup diğer harflerinde y olan personeli listeleyiniz
+select * from personel where isim like '_e%y%' ;
+
+-- a harfi olmayan personeli listeleyin
+select * from personel where isim not like '%a%';
+
+-- 1. harfi A ve 7. harfi a olan personeli listeleyin
+select * from personel where isim like 'A_____a%';
+
+--Sondan ikinci karakteri 'r' olan "isim" değerlerini listeleyiniz.
+select * from personel where isim like '%r_';
+
+
+
+-------------------------------------------------------------------------
+			--TRANSACTION----
+
+Begin;
+
+insert into ogrenciler2 VALUES (default,'Ali Can','Hasan Can',75.5);
+insert into ogrenciler2 VALUES (default,'Canan Gül','Ayşe Şen',90.5);
+
+SAVEPOINT x;   //bu satir kaydetme noktasi ekler daha sonra rollback yapılınca buradaki verilere kadar döner.
+
+insert into ogrenciler2 VALUES (default,'Kemal Can','Ahmet Can',85.5);
+insert into ogrenciler2 VALUES (default,'Ahmet Şen','Ayşe Can',65.5);
+
+ROLLBACK TO x;	//savepoint deki verilere dönme kodu
+COMMIT;		//Transaction bitirme kodu
+
+----------------------------------------------------------------------------
+-- DDL - Data Definition Lang.
+
+--(ALTER)
+
+tabloya yeni sütün eklemek,silmek,adini degistirmek icin kullanırız, yapısal değişiklik yapar(Örn: sutun degiştirebiliriz)
+
+---SORU: cinsiyet varchar(20), yas int sütünlarini ekleyelim. 
+
+Alter  table tablo_adi add cinsiyet varchar(20), add yas int;
+
+--SORU: personel tablosundan sirket field'ini siliniz
+Alter  table personel drop column sirket;
+
+--SORU: Personel tablosundaki sehir sutununun adını ulke olarak değiştirelim
+Alter  table personel RENAME column sehir to ulke;
+
+--SORU: Personel tablosunun adını isciler olarak değiştiriniz
+Alter  table personel RENAME to isciler;
+
+-----------------------------TYPE ve SET KOMUTU-------------------------------------------------------------
+--SORU:1) ogretmen tablosunun;
+		-'adi' field'ini  datasını varchar(30)'dan varchar(20)'ye güncelleyin
+		-'soyadi' field'ine NOT NULL ekleyin
+
+alter table ogretmen
+alter column adi TYPE varchar(20),
+alter column soyadi SET NOT NULL;
+	
+----------------------------CHECK KOMUTU ile sinirlama koyma (notu>60)-----------------------------------------------------------------
+alter table notlar
+add constraint sinir60 check (notu>60);
+Açıklama: notu 60 tan buyuk girebilsin
+
+-------------------------------FOREIGN KEY/PRIMARY KEY-----------------------------------------------------------------------------
+-----------------------------TABLOLAR ARASI İLİŞKİ KURMA-------------------------------------------------------------
+create table ogretmen(
+
+id int PRIMARY KEY, -- Buraya dikkat edelim bu tablonun PRIMARY KEY(Birincil Anahtar) i 'id' olarak belirledik
+adi varchar(30) UNIQUE,
+soyadi varchar(30)	
+
+)
+
+--ikinci tablomuz da dersler adinda olusturalım.
+Create table dersler(
+
+ders_id int PRIMARY KEY,
+ders_adi varchar(30),
+ogretmen_id int,
+CONSTRAINT fk_adi FOREIGN KEY (ogretmen_id) REFERENCES ogretmen(id)--Bu tablodaki 'ogretmen_id' yi FK yaptık ve
+--referans olarak da Parent Tablonun adını, parantez içinde de Parent tablonun PK'ini yazdik.
+	
+)
+
+NOT1: Veri ekleme yaparken ilk Parent tabloya ekleme yapariz sonra child tabloya ekleme yaparız,Diger türlü hata verir.
+NOT2: Tabloların içini 'delete from tablo_adi' ile boşaltmamız gerekirse child tablolari boşaltmadan parenti silmez.
+
+NOT3: Parent tablonun verilerini DELETE koduyla normalde direk silemeyiz. Ama Child tabloda FK tanımlarken 
+'CONSTRAINT fk_adi FOREIGN KEY (ogretmen_id) REFERENCES ogretmen(id)' kodundan sonraki alt satırda 'ON DELETE CASCADE'
+yazarsak Child Tablodan veriyi silmeden Parent tablodan silebilme yetkisi veririz. Böylece parentten silinen veri childdan
+da otomatik silinir.	
+
+--NOT3 KULLANIMI:(Üstteki child tabloyu aşağıdaki şekilde oluştur, Parent aynısı olsun)
+
+Create table dersler(
+ders_id int PRIMARY KEY,
+ders_adi varchar(30),
+ogretmen_id int,
+CONSTRAINT fk_adi FOREIGN KEY (ogretmen_id) REFERENCES ogretmen(id)
+ON DELETE CASCADE	
+)
+
+-------------------------SONRADAN TABLOYA PRIMARY KEY EKLEME---------------------------
+1. YOL:
+ALTER TABLE ogretmen
+ADD PRIMARY KEY (id);
+
+2.YOL:
+ALTER TABLE notlar
+ADD CONSTRAINT pk_adi PRIMARY KEY (notu);
+
+-------------------------SONRADAN TABLOYA FOREIGN KEY EKLEME---------------------------
+
+ALTER TABLE dersler(child tablo)
+ADD FOREIGN KEY (id) REFERENCES ogretmen;(parent tablo)
+
+-----------------------------FOREIGN KEY SİLME------------------------------------------------
+
+ALTER TABLE dersler DROP CONSTRAINT fk_adi;
+
+NOT: PRİMARY KEY'den önce FOREIGN KEY'i sil
+
+-----------------------------PRIMARY KEY SİLME------------------------------------------------
+
+ALTER TABLE ogrenciler DROP CONSTRAINT pk_adi;
+
+---------------------------------------------------------------------------------------------------------
+--------------------------------------EXISTS , NOT EXISTS----------------------------------------------
+--Exists true false gibidir.Boolean
+
+--SUBQUERY'lerde kullnılır(select)
+--bir tabloda olan diger tabloda var olanları veya olmayanları getir dediğinde kullanılır
+
+--MART VE NİSAN aylarında aynı URUN_ID ile satılan ürünlerin
+--URUN_ID’lerini listeleyen ve aynı zamanda bu ürünleri MART ayında alan
+--MUSTERI_ISIM 'lerini listeleyen bir sorgu yazınız.
+
+--ACIKLAMA:Mart ve nisan aylarında aynı urun_id dedigi icin EXISTS'den sonraki sorguda urun_id'ler esitse getir dedik
+
+select urun_id,musteri_isim FROM mart   //mart tablosundaki 'urun_id,musteri_isim' i getir
+WHERE EXISTS (SELECT urun_id FROM nisan WHERE nisan.urun_id=mart.urun_id) //urun_id her iki tabloda da aynı olan column 
+
+------------------------------------------------------------------------------------------------------------
+--------------------------------- SUBQUERIES (IN KULLANIMI)(in)------------------------------------------------
+
+--sehir Istanbul,Ankara olanları listeleyin
+select * from calisanlar2 where sehir in('Istanbul','Ankara');
+
+--sehir Istanbul,Ankara olmadıgı listeleyin
+select * from calisanlar2 where sehir not in('Istanbul','Ankara');
+
+
+BURADA İLİŞKİ KURULMAYAN İKİ TABLODAN BİRLEŞTİREREK VERİ ÇAĞIRMAYA ÖRNEKLER ÇÖZÜYORUZ
+
+-- calisan sayisi 15.000’den cok olan markalarin isimlerini ve
+--bu markada calisanlarin isimlerini ve maaşlarini listeleyin.
+
+select isim,maas,isyeri from calisanlar2 //'isim' calisanlarin isimleri,'isyeri' diger tablodaki marka_ismi ile aynı
+where isyeri IN(SELECT marka_isim FROM markalar WHERE calisan_sayisi>15000)
+
+AÇIKLAMA: Kodda bana calisanlar2 tablosundan 'isyeri' columunu, 
+markalar tablosundaki calisan_sayisi 15000'den buyuk olan marka
+isimlerini getir ve isim,maas,isyeri yazdır diyor
+
+
+----------------------------------------------------------------------------------------------------------------------
+------------------------------------------- AGGREGATE METHOD ---------------------------------------------------------
+-------------(SUM(Topla),COUNT(Say),MIN(EN küçük değer),MAX(En büyük değer),AVG(Ortalama))-----------------------------
+
+TABLO ADI:		calisanlar2(maas,isyeri,isim,sehir),
+	  		marka(marka_isim,calisan_isim)
+
+HER İKİ TABLODA ORTAK OLAN:	isyeri=marka_isim
+
+--En düşük maaşı bulun
+SELECT min(maas) from calisanlar2
+
+--En yüksek maaşı bulun
+SELECT max(maas) from calisanlar2
+
+--Maaşlar toplamı bulun
+SELECT sum(maas) from calisanlar2
+
+--Maaşlar ortalamasını bulun
+SELECT avg(maas) from calisanlar2  --ondalıklı sonuç verir
+SELECT round(avg(maas))   	   --ondalıksız olarak sonucu yuvarlar
+SELECT round(avg(maas),2)	   --ondalıklı olarak virgülden sonra 2 sayıyı yazar
+
+--Kaç kişinin maaş aldığını bulun
+SELECT count(maas) from calisanlar2
+
+
+BU KONU İLE İLGİLİ KOMPLEX SORGULAR:
+
+-- Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin toplam maaşini listeleyiniz
+(Markaların maaslarını kendi icinde toplanacak)
+SELECT marka_isim,calisan_sayisi,(SELECT SUM(maas) from calisanlar2 WHERE marka_isim=isyeri) AS Toplam_Maaslar
+FROM calisanlar2
+
+-- Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin maksimum ve minumum maaşini listeleyen bir Sorgu yaziniz.
+SELECT marka_isim,calisan_sayisi,
+				(SELECT max(maas) FROM calisanlar2 WHERE marka_isim=isyeri) AS MAXMAAS,
+				(SELECT min(maas) FROM calisanlar2 WHERE marka_isim=isyeri) AS MINMAAS
+FROM markalar;
+
+--Her markanin id’sini, ismini ve toplam kaç şehirde bulunduğunu listeleyen bir SORGU yaziniz.
+SELECT marka_id,marka_isim,
+	(SELECT COUNT(sehir) FROM calisanlar2 WHERE marka_isim=isyeri) AS Bulundugu_Sehir_Sayisi 
+FROM markalar 
+
+--Interview Question: En yüksek ikinci maas değerini çağırın.
+SELECT max(maas) AS enyuksek_ikinci_maas FROM calisanlar2
+WHERE maas<(SELECT max(maas) FROM calisanlar2)
+
+----Interview Question: En düşük ikinci maas değerini çağırın.
+SELECT min(maas) AS endusuk_ikinci_maas FROM calisanlar2
+WHERE maas>(SELECT min(maas) FROM calisanlar2)
+
+--En yüksek üçüncü maas değerini bulun
+SELECT max(maas) AS enyuksek_ucunu_maas FROM calisanlar2
+WHERE maas<(SELECT MAX(maas)From calisanlar2 WHERE maas<(Select max(maas) FROM calisanlar2))
+
+--En düşük üçüncü maas değerini bulununuz (ÖDEV)
+SELECT min(maas) AS EN_DUSUK_UCUNCU_MAAS FROM calisanlar2
+WHERE maas>(SELECT min(maas) FROM calisanlar2 where maas>(SELECT min(maas) FROM calisanlar2))
+
+-------------------------------- GROUP BY --------------------------------------
+--------------------------------------------------------------------------------
+
+TABLO ADI : manav(isim,urun_adi,urun_miktari),
+	    personel(id,ad,soyad,yas,cinsiyet,sehir,ulke,maas)
+
+-- Kisi ismine göre satılan toplam meyve miktarlarını gösteren sorguyu yazınız.
+SELECT isim, sum(urun_miktari) as toplam_urun from manav
+group by isim
+
+
+-- satılan meyve türüne (urun_adi) göre satılan (urun_miktari )MIN ve 
+-- MAX urun miktarlarini, MAX urun miktarina göre sıralayarak listeyen sorguyu yazınız.
+SELECT urun_adi, min(urun_miktari) as minimum_urun_mik, max(urun_miktari) as maksimum_urun_mik from manav
+where urun_adi is not null
+group by urun_adi
+order by maksimum_urun_mik asc
+
+-- kisi ismine ve urun adına göre satılan ürünlerin toplamını gruplandıran 
+-- ve isime göre ters sırasıda listeyen sorguyu yazınız.
+SELECT isim, urun_adi, sum(urun_miktari) as toplam_urun from manav
+group by isim, urun_adi
+order by isim desc;
+select * from manav
+select * from personel
+
+-- personelin calıştığı ülkeleri listeleyiniz
+SELECT ulke from personel group by ulke
+
+-- Ülkelere göre ortalama maaşları listeleyiniz
+select ulke, round(avg(maas),2) as ortalama_maas
+from personel
+group by ulke
+
+-- Maas ortalamasını bayanlar ve baylar olarak sorgulayınız
+select cinsiyet,round(avg(maas)) as ortalama_maas
+from personel
+group by cinsiyet
+
+-- Personeli, ulkelere göre ve şehirlere göre gruplayarak sorgulayın
+select ulke,sehir from personel
+group by ulke,sehir
+
+-- Personelin, ulkelere göre ve şehirler göre calışan sayısını sorgulayın.
+select ulke,sehir,count(sehir) as calisan_sayisi from personel
+group by ulke,sehir
+
+-- Her ulke için bay ve bayan çalışan sayısı ve yaş ortalamasını sorgulayınız.
+select ulke,cinsiyet,count(*) as calisan_sayisi,avg(yas) as yas_ortalamasi from personel
+group by ulke,cinsiyet
+--count(*) as girilen ulke,cinsiyet 'e gore dolu olan butun satırları sayar,yani hem ulke hem cinsiyet'e gore dolu olanların sayısını dondurur
+select ulke,cinsiyet,avg(yas) as yas_ort from personel group by ulke,cinsiyet
+
+-- Her ulke için bay ve bayan çalışan sayısı ve yaş ortalamasını  ve maası 30000 den büyük olanları sorgulayınız.
+select ulke, cinsiyet,avg(yas) as ortalama_yas,count(*)as calisan_sayisi from personel
+where maas>30000
+group by ulke,cinsiyet
+
+-- Her ulke için; bay ve bayan çalışan sayısı, yaş ortalamasını, maaşı 30000 den büyük olanları
+-- ve ortalama yaşı büyükten küçüğe doğru sıralayınız.
+select ulke,cinsiyet,round(avg(yas)) as ortalama_yas,count(*) from personel
+where maas>30000
+group by ulke,cinsiyet
+order by ortalama_yas desc
+
+------------------------------------LIMIT--------------------------------------------------
+-------------------------------------------------------------------------------------------
+AÇIKLAMA: TABLODA BELİRLİ SAYIDA VERİ SATIRINI İSTEDİGİMİZDE limit KULLANIRIZ. offset de atlama yapmak için kullanırız
+
+TABLO ADI:kisiler(id,ssn,iaim,soyisim,maas,adres)
+
+select * from kisiler
+
+
+-- listeden ilk 5 veriyi listeleyiniz
+select * from kisiler limit 5;
+
+--ilk iki veriden sonra 5 veriyi listeleyin
+select * from kisiler limit 5 OFFSET 2
+
+-- listeden ilk 5 veriyi maasi en yüksek olanı listeleyiniz
+select * from kisiler order by maas desc limit 5 
+
+-- id değeri 5 den büyük olan ilk iki veriyi listeleyiniz
+select * from kisiler where id>5 limit 2
+
+--  MAAŞ'ı en yüksek 3 kişinin bilgilerini listeleyiniz
+select * from kisiler order by maas desc limit 3 
+
+-- En yüksek maaşı alan 4. 5.  6. kişilerin bilgilerini listeleyiniz
+select * from kisiler order by maas desc limit 3 offset 3
+ 
+-------------------------------------------------JOIN---------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+
+--JOINS: 	 1) INNER JOIN: Ortak(Common) datayı verir.
+		 2) LEFT JOIN: Birinci table'nin tüm datasını verir.
+		 	Yani Soldaki tabloda asıl veriler olacak, diger tabloda aynı olan verileri oturtacak diğer hücreler null döndürecek
+		 3) RIGHT JOIN: İkinci table'nin tüm datasını verir.
+		 4) FULL JOIN: İki table'nin tüm datasını verir.
+		 5) SELF JOIN: Tek table üzerinde çalışırken iki table varmış gibi çalışılır. 
+
+
+------------1)INNER JOIN -----------
+
+Her iki tabloda ortak olan verileri dönürür.
+
+--SORU1: Iki Tabloda sirket_id’si ayni olanlarin; sirket_ismi, siparis_id ve
+--  siparis_tarihleri listeleyen bir sorgu yaziniz.
+
+select sir.sirket_isim,sip.siparis_id,sip.siparis_tarihi
+from sirketler sir 
+inner join siparisler sip
+on sir.sirket_id = sip.sirket_id
+
+------------2) LEFT JOIN / 3) RIGHT JOIN -----------
+
+-- SORU1: Tüm filmleri, film türlerini ve filimlerde oynayan aktörleri listeleyiniz.
+--LEFT ile çözümü
+select f.film_name,f.category,a.actor_name		
+from films f 		
+left join actors a		
+on f.film_id = a.film_id order by f.film_name		
+
+--RIGHT ile çözümü
+select f.film_name,f.category,a.actor_name				
+from actors a				
+right join films f				
+on f.film_id=a.film_id order by f.film_name	
+	
+
+-----------4) FULL JOIN -----------
+--İki table'dan da company_name, order_id ve order_date değerlerini çağırın.
+select mc.company_name,o.order_id,o.order_date
+from orders o full join my_companies mc
+on mc.company_id = o.company_id;
+
+-------------5) SELF JOIN-----------
+CREATE TABLE workers
+(
+  id CHAR(2),
+  name VARCHAR(20),
+  title VARCHAR(60),
+  manager_id CHAR(2)
+);
+INSERT INTO workers VALUES(1, 'Ali Can', 'SDET', 2);
+INSERT INTO workers VALUES(2, 'John Walker', 'QA', 3);
+INSERT INTO workers VALUES(3, 'Angie Star', 'QA Lead', 4);
+INSERT INTO workers VALUES(4, 'Amy Sky', 'CEO', 5);
+SELECT * FROM workers;
+--workers tablosunu kullanarak çalışanların yöneticilerini gösteren bir tablo hazırlayın.
+
+SELECT employee.name AS Employee, manager.name AS Manager
+FROM workers employee FULL JOIN workers manager
+ON manager.id = employee.id
+
+--------------------------------------------------------------------------
+----------------HAVING ile ilgili PRACTİCE:-------------------------
+----------------------------------------------------------------------------
+--Group by ardından where kullanılmaz onun yerine şartı HAVING ile yaparız
+
+
+--Toplam salary değeri 2500 üzeri olan her bir çalışan için salary toplamını bulun.
+select name,sum(salary) as "Total Salary" from workers 
+group by name
+having sum(salary)>2500
+
+
+--Birden fazla çalışanı olan, her bir state için çalışan toplamlarını bulun.
+select state,count(state) as number_of_employees from workers
+group by state
+having count(state)>1
+
+
+--Her bir state için değeri 3000'den az olan maximum salary değerlerini bulun.
+select state,max(salary) from workers
+group by state
+having max(salary)<3000
+
+
+--Her bir company için değeri 2000'den fazla olan minimum salary değerlerini bulun.
+select company,min(salary) as MIN_SALARY from workers
+group by company
+having min(salary)<2000
+
+
+--Tekrarsız isimleri çağırın.
+select distinct name from workers --Distinct clause, çağırılan terimlerden tekrarlı olanların sadece birincisini alır.
+
+--Name değerlerini company kelime uzunluklarına göre sıralayın.
+select name,company from workers 
+order by LENGTH(company)
+
+--Tüm name ve state değerlerini aynı sütunda çağırarak her bir sütun değerinin uzunluğuna göre sıralayın.
+--CONCAT() fonksiyonu birden fazla String veya sutunu birleştirmek için kullanılır.
+
+--1.YOL:CONCAT() fonksiyonu kullanarak
+select CONCAT(name,' ',state) as name_and_state from workers
+order by LENGTH(CONCAT(name,state))
+
+--2.YOL
+select name || ' ' || state || ' ' || Length(name) +Length(state) as "Name and States"
+FROM workers
+ORDER BY Length(name) +Length(state)
+
+--3.YOL
+select CONCAT(name,' ',state) as name_and_state from workers
+order by LENGTH(name) + LENGTH(state);
+
+--------------------------------------------------------------------------------------------
+
+
+
+UNION Operator: 1) İki sorgu(query) sonucunu birleştirmek için kullanılır.
+				2) Tekrarsız(unique) recordları verir.
+				3) Tek bir sutuna çok sütün koyabiliriz.
+				4) Tek bir sütüna çok sütun koyarken mevcut data durumuna dikkat etmek gerekir.				
+
+SELECT * FROM workers;
+
+--salary değeri 3000'den yüksek olan state değerlerini ve 
+--salary değeri 2000'den küçük olan name değerlerini TEKRARSIZ olarak bulun.
+select state as "Name and State",salary from workers where salary>3000
+
+-----------UNION--------
+
+select name,salary from workers where salary<2000
+
+--salary değeri 3000'den yüksek olan state değerlerini ve 2000'den küçük olan name değerlerini TEKRARLI olarak bulun.
+select state as "Name and State",salary from workers where salary>3000
+
+
+-----------UNION ALL 		--->>	UNION ile aynı işi yapar. Ancak, tekrarlı değerleri de verir
+
+select name,salary from workers where salary<2000
+
+--salary değeri 1000'den yüksek, 2000'den az olan "ortak" name değerlerini bulun.
+select name from workers where salary>1000
+
+
+-----------INTERSECT -->>INTERSECT Operator: İki sorgu (query) sonucunun ortak(common) değerlerini verir. Unique(tekrarsız) recordları verir.
+
+select name from workers where salary<2000
+
+--salary değeri 2000'den az olan ve company değeri  IBM, APPLE yada MICROSOFT olan ortak "name" değerlerini bulun.
+select name from workers where salary<2000
+
+-----------INTERSECT-----------
+
+select name from workers where company IN('IBM','APPLE','MICROSOFT');
+
+-------------EXCEPT Operator----------- 
+Bir sorgu sonucundan başka bir sorgu sonucunu çıkarmak için kullanılır. Unique(tekrarsız) recordları verir.
+--salary değeri 3000'den az ve GOOGLE'da çalışmayan  name değerlerini bulun.
+select name from workers where salary<3000 
+EXCEPT
+select name from workers where company='GOOGLE';
+
+
+

@@ -1,0 +1,69 @@
+
+:::PROJEYİ İLK Github'a yüklemek için:::
+
+1-)git init==>	Local'de repo olusturma, yani projeyi git ile irtibatlandırma
+2-)git add . ==> Tum dosyalari local'deki repoya yukle
+3-)git commit -m"isim" ==> veriyon olusturma kodu, senkronizasyon yapmak için yapılır
+4-)Yukaridaki aşamalardan sonra github sitesindeki hesabımızdan bir repository olusturuyoruz
+5-)git branch -M main ==> branch olusturuyoruz NOT: büyük M yapınca ana branchin adını değiştirir, k
+6-)git remote add origin https://github.com/.... ==> github ile 4. adimda olusturdugumuz repository'nin adresini
+   adres yerine yazip irtibatlandiriyoruz
+7-)git push -u origin main ==> localden remote'ye verileri gonderiyoruz
+
+::::::::::::::git restore . komutu:::::::::::::
+
+git add . yapmadan projemizdeki yaptigimiz eklemeleri silmek istersek restore komutunu kullaniriz.
+
+::::::::::::::git restore --staged . komutu:::::::::
+
+git restore --staged . komutuda==>>git add . yapilip 'Stage Area' ya gonderdigimiz bir projeyi tekrar 'Working Space' ye gönderir.
+Bunu kontrol ederken git restore --staged . yazdigimizda projeden yapilan eklemeler hemen gitmez cunku Working Space'de olarak
+kodlar bize gorunur.git status yaptigimizda guncelleme olan yer kirmizi gorunecektir.Eger oradan da silmek istersen git restore .
+komutunu kullan
+
+::::::::::::::git reset -hard::::::::::::::::::::::::
+
+Bu komut hem 'Stage Area' da hemde 'Working Space' deki eklemelerimizi siler bir onceki versiyona gider.
+
+:::::::::Bilgisayardaki Bos Bir Klasöre Github'dan Dosyalari Cekme:::::::
+
+1-)Boş klasörümüzü açıp adres çubuguna cmd yazip enter'a basiyoruz
+2-)Gelen cmd ekranina "git init" kodunu yazıp dosyayı irtibatlandiriyoruz
+3-)Yine cmd ekranina "git pull https://github.com/......" kodunu yaziyoruz.Buradaki adres github'daki indirecek oldugumuz
+   adrestir.
+
+::::::::::::Githubla Localdeki Bir Klasörü irtibatlandirma::::::::::::::::
+
+1-)git branch -M main
+2-)git remote add origin https://github.com/......
+3-)git push -u origin main
+
+
+::::::::::Projeyi Pull etme::::::::
+İlk Yöntem:
+    Daha önceden java projesini github'a yükledigimiz bir projeyi eger github'da degişiklik yapılırsa onu kendimize 
+güncellemek için kullanırız.
+1-)Githubdan proje adresi kopyalanır
+2-)javadan güncel olmayan proje açıkken File-->New-->Project from Version Control... 'a tıklanır
+3-)Açılan pencerede URL: kısmına kopyaladiğimiz adres yapıştırılır Clone'ye tıklanir.
+
+
+::::::Branch'leri birleştirme 'merge' KOMUTU:::::::
+Seneryo:Biz bir projeyi github ile ilişkilendirdik, daha sonra proje local de değil de github da degişiklik yapildi.
+        Sonra bu githubdaki projeyi Pull etmenin ilk yöntemi ile Clone yaptık.İnteliJde Clone yapılan projeyi actik
+        Projede gelen main branch'inin yaninda kendi adimiza baska branch olusturduk.Fakat kendi adimiza olusturdugumuz
+	bu branch'de herhangi bir degisiklik yaptıgımızda main branchinde degisiklik olmadi bunun icin merge komutu ile 
+	branchleri birleştirebiliriz.
+Kodun Yazılışı:
+	main branch'i içinde iken; git merge mustafa (Not:mustafa ikinci olusturdugumuz branch)
+
+git log --oneline
+git branch branch_adi  --branch olusturma
+git checkout branch_adi --branch degistime
+git merge branch_adi  --branch birlestirme
+
+::::::::::::::::::::::::::::::::::COLLABORATION:::::::::::::::::::::::::::::::::::::
+
+
+
+
