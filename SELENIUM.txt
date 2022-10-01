@@ -332,9 +332,12 @@ public class C03_BeforeClassAfterClass {
 			::::::::::::DROPDOWN KOMUTLARI(comboBox)::::::::::::
 
  	WebElement ddm = driver.findElement(By.xpath("//*[@id='searchDropdownBox']"));//Buradaki xpath dropdown'inkidir.
- 	Select select = new Select(ddm);			//Eger select objesi baska testlerde olusturcaksak class' da olustur.
-ÖNEMLİ: List<WebElement> ddmList = select.getOptions(); //  getOptions() methodu ile List'in içine atmaya yariyor
+
+ 	Select select = new Select(ddm);				//Eger select objesi baska testlerde olusturcaksak class' da olustur.
+
+ÖNEMLİ: List<WebElement> ddmList = select.getOptions(); 		//  getOptions() methodu ile List'in içine atmaya yariyor
 	System.out.println(ddmList.size());
+
 
 +++++Yukarıdaki seçtigimiz dropdown'da "Books" diye element vardır ve onun var oldugunu kontrol etmek için;
 
@@ -347,12 +350,15 @@ select.selectByValue("search-alias=stripbooks-intl-ship");        //value degeri
 
 ------------------------------------------------------------------------------------------------------------------------
 
-		::::::::::::::::::::::::ALERT(Siteye girdiğimizde çıkan Uyarı):::::::::::::::::::::::::::::::
+		::::::::::::::::::::::::ALERT(Siteye girdiğimizde çıkan Uyarı/Açılır Pencere):::::::::::::::::::::::::::::::
 
 bir web sitesine girdigimizde karsımıza bir uyarı mesajı yada bir buttona tıkladığımızda bir uyarı cıkabilir
 eğer bu uyarıya incele(mause sağ-tik inspect) yapabiliyorsak bu tür alert lere html alert denir.
 ve istedigimiz locate'i alabiliriz. Ama gelen uyarı kutusuna müdahale (sağ tik inspect ile) edemiyorsak
 bu tür alertlere  js alert denir.
+
+Çalışılabilecek Siteler : https://the-internet.herokuapp.com/javascript_alerts
+			  http://webdriveruniversity.com/Popup-Alerts/index.html
 
 	driver.switchTo().alert().accept();   //Çıkan allert uyarısını kabul eder
         driver.switchTo().alert().dismiss();    //İptal butonuna tıklar
@@ -588,7 +594,7 @@ NOT: Kodlarda geçen variablelerin değerlerini anlamak için kodun hepsine baş
        	        FileInputStream fis =new FileInputStream(dosyaYolu);  //FileInputStream objesi olusturup,parametre olarak dosya yolunu gir
         	Workbook workbook = WorkbookFactory.create(fis);      //Workbook objesi olusturalim,parameter olarak fileInputStream objesini gir
 		Sheet sheet = workbook.getSheet("Sayfa1")	      //excelde kullanılacak olan sayfanin adi yazilir
-		Row row =sheet.getRow(3);			       //Sayfa1 deki 3. satırı bu şekilde seceriz	
+		Row row =sheet.getRow(3);			       //Sayfa1 deki 3. satır 3. hücreyi bu şekilde seceriz	
 		Cell cell=row.getCell(3);			      //hücre secimi bu sekilde yapılır	
 		System.out.println(cell);
 
@@ -598,11 +604,277 @@ NOT: Kodlarda geçen variablelerin değerlerini anlamak için kodun hepsine baş
                 Workbook workbook = WorkbookFactory.create(fis);     //- Workbook objesi olusturalim,parameter olarak fileInputStream objesini girelim
 								     //- WorkbookFactory.create(fileInputStream)
  		String actualData=workbook.getSheet("Sayfa1").
-                    getRow(3).
+                    getRow(3).                                        //Sayfa1 deki 3. satır 3.hücreyi bu şekilde seceriz
                     getCell(3).
                     toString();
             System.out.println(actualData);
 
 ---------------------		
-++Excel'de Toplam satır sayısını öğrenmek için;   int sonSatir = workbook.getSheet("Sayfa1").getLastRowNum();
++Excel'de enson hangi satıra kadar kullanıldığını görmek için;(Kullanılan son satırın indexini verir) 
+				  int sonSatir = workbook.getSheet("Sayfa2").getLastRowNum();
+---------------------		
+++Excel'de kullanılan toplam satır sayısını görmek için;
+				  int kullanilanSatir = workbook.getSheet("Sayfa2").getPhysicalNumberOfRows();
+
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::::EXCEL DOSYASINA YAZDIRMA:::::::::::::::::::::::::::::::::
+
+AÇIKLAMA: Yine excel dosyasını okuturken tanımladığımız objeleri tanımlarız:
+
+ 	String dosyaYolu ="src/resources/ulkeler.xlsx";
+        FileInputStream fis = new FileInputStream(dosyaYolu);
+        Workbook workbook = WorkbookFactory.create(fis);
+
+        workbook.getSheet("Sayfa1").getRow(0).createCell(4).setCellValue("Nüfus");  //Sayfa1 workbook'una 0. satırının 4. hücresine Nüfus yazar
+        workbook.getSheet("Sayfa1").getRow(9).createCell(4).setCellValue("250000"); //Sayfa1 workbook'una 9. satırının 4. hücresine 250000 yazar
+
+
+        FileOutputStream fos = new FileOutputStream(dosyaYolu);			//excel dosyasını kaydetmek için gerekli obje olusturulur
+	workbook.write(fos);							//dosyayı kaydeder
+
+	fis.close();				//dosyaları kapatır.
+        fos.close();
+        workbook.close();
+
+
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::::EXCEL DOSYASINDAN VERİ SİLDİRME:::::::::::::::::::::::::::::::::
+
+	String dosyaYolu= "src/resources/ulkeler.xlsx";
+
+        FileInputStream fis =new FileInputStream(dosyaYolu);
+        Workbook workbook = WorkbookFactory.create(fis);
+        Sheet sheet = workbook.getSheet("Sayfa1");				//excelde kullanılacak olan sayfanin adi yazilir
+
+
+        Row row =sheet.getRow(3);       //Sayfa1 deki 3. satırı bu şekilde seceriz
+        Cell cell=row.getCell(3); 	//Satır secimi yapıldıktan sonra hücre secimi bu sekilde yapılır
+
+        row.removeCell(cell);        // bir cell deki veriyi SİLMEK için row objesini kullanırız
+
+
+	FileOutputStream fos = new FileOutputStream(dosyaYolu);
+        workbook.write(fos);						//dosyayı kaydeder
+
+------------------------------------------------------------------------------------------------------------------------
+		::::::::::::::::::::::::::::::::EKRAN GÖRÜNTÜSÜNÜ ALMA::::::::::::::::::::::::::::::::::::::
+
+-------------------Ekranın Tamamının Görüntüsünü Alma-------
+
+++İlk olarak ekran fotosu alıncak siteye gidildikten sonra ;
+
+	TakesScreenshot ts = (TakesScreenshot) driver;
+	File tumSayfaResmi=ts.getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(tumSayfaResmi,new File("target/ekranGoruntusu/allPage.jpeg")); //intelijdeki project bölümünden target dosyasının altına 
+											  //ekranGoruntusu dosyası olusturur ve oraya PrintScreen atar.
+											  //Eger Targetin altında gorunmuyorsa dosyada sağtıkla ve yenile yap
+++Burada her çekilen resimin başına tarih attırmak içinse;
+
+
+	driver.get("https://amazon.com");
+
+        TakesScreenshot ts = (TakesScreenshot) driver;
+
+        LocalDateTime date = LocalDateTime.now();					//Ekran görüntüsünün adına tarih attırmak için obje olusturduk
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("YYMMddHHmm");
+        String tarih = date.format(formater);
+
+        File tumSayfaResmi=ts.getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(tumSayfaResmi,new File("target/ekranGoruntusu/"+tarih+".jpeg"));
+
+-------------------İstedigimiz WebElementin Görüntüsünü Alma----------
+
+	WebElement fotosuAlinacakElement = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']")); //fotosu alınacak elementin locate et
+        File nutellaArmaSonucu = fotosuAlinacakElement.getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(nutellaArmaSonucu,new File("target/ekranGoruntusuWE/WebElementSS.jpeg"));
+
+------------------------------------------------------------------------------------------------------------------------
+		:::::::::::::::::::::::::::Dosyanın Yolunu Yazarak Olup Olmadağını Kontrol Etme:::::::::::::::::::::
+						(Bu Örneği Practice'de yaptık)
+
+   	String dosyaYolu ="C:\\Users\\myComputer\\Desktop\\danıştay dosya.jpg";
+        Assert.assertTrue(Files.exists(Paths.get(dosyaYolu)));
+
+------------------------------------------------------------------------------------------------------------------------
+			:::::::::::::::::JAVA SCRIPT KODUYLA BELİRTİLEN ELEMENTE KADAR AŞAĞISINA İNME:::::::::::::
+
+--------Belirtilen Elemente kadar inmek için;
+
+	WebElement careers = driver.findElement(By.xpath("//*[text()='Careers']"));//amazon sitesinde bulunan bu elemente kadar sayfayı indirmek için tanımladık
+
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("arguments[0].scrollIntoView(true);",careers); //Sayfayı careers diye locate edilen variablrye kadar indirir
+
+
+--------Belirtilen elemente JS kodu ile tıklamak;
+
+	jse.executeScript("arguments[0].click();",careers);   //üst satırda locate ettigimiz elemente tıklar
+
+NOT : Bu konudaki kodlar birbirinin devamıdır
+
+------------------------------------------------------------------------------------------------------------------------
+		:::::::::::::::::BeforeMethodAfterMethod / BeforeClassAfterClass::::::::::::::::::
+
+	
+-----------------BeforeClassAfterClass: Bu notasyon ile aynı sayfada belirtilen başka sitelere gider ve en son @AfterClass notasyonunu çalıştırır.
+				yani ; @BeforeClass 1 kere
+				       @AfterClass  1 kere çalışır
+
+CLASS İÇERİĞİ :			
+
+public abstract class TestBaseBeforeMethodAfterMethod {// obje oluşturulmasını engellemek için abstract yaptık
+
+    protected WebDriver driver;
+ //   protected Actions actions;
+    protected String tarih;
+
+    @BeforeMethod
+    public void setUp(){
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    //    actions = new Actions(driver);
+
+        LocalDateTime date = LocalDateTime.now(); // PrintScreen yaptıgımızda tarih saati fotonun ismi yapmak için olusturduk
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("YYMMddHHmmss");
+        tarih = date.format(formater);
+    }
+    @AfterMethod
+    public void tearDown(){
+        driver.close();
+    }
+}
+
+
+-----------------BeforeMethodAfterMethod: Bu notasyon ile her @Test notasyonu çalıştıgında @BeforeMethod ve @AfterMethod notasyonları çalışır.
+					yani ; @BeforeMethod her @Test notasyonu çalıştıgında çalışır
+				               @AfterMethod her @Test notasyonu çalıştıgında çalışır
+
+
+CLASS İÇERİĞİ :
+
+public abstract class TestBaseBeforeMethodAfterMethod {// obje oluşturulmasını engellemek için abstract yaptık
+
+    protected WebDriver driver;
+ //   protected Actions actions;
+    protected String tarih;
+
+    @BeforeMethod
+    public void setUp(){
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    //    actions = new Actions(driver);
+
+        LocalDateTime date = LocalDateTime.now(); // PrintScreen yaptıgımızda tarih saati fotonun ismi yapmak için olusturduk
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("YYMMddHHmmss");
+        tarih = date.format(formater);
+    }
+    @AfterMethod
+    public void tearDown(){
+        driver.close();
+    }
+
+
+------------------------------------------------------------------------------------------------------------------------
+	:::::::::::::::::::::::::::::Priority(@Test notasyonu çalışma sıralaması):::::::::::::::::::
+
+AÇIKLAMA: Priority @Test Notasyonlarını istediğimiz sıra çalıştırmak için kullanırız. 
+	@Test(priorty = 1),@Test(priorty = 2) şeklinde kullanılır.
+
+Aşağıdaki kodda ilk hepsiburada,ikinci bestbuy,üçüncü youtube,dördüncü amazon a gider
+
+@Test (priority = 1)
+    public void youtubeTest() {
+        driver.get("https://www.youtube.com");
+    }
+    @Test 					// Burayı 0 kabul eder
+    public void bestbuyTest() {
+        driver.get("https://www.bestbuy.com");
+    }
+    @Test (priority = 2)
+    public void amazonTest() {
+        driver.get("https://www.amazon.com");
+    }
+    @Test (priority = -1)
+    public void hepsiburadaTest() {
+        driver.get("https://www.hepsiburada.com");
+    }
+
+------------------------------------------------------------------------------------------------------------------------
+		:::::::::::::::::::::::::::::dependsOnMethods (Belitilen test çalışmazsa çalışma):::::::::::::::::::::
+
+	Açıklama: DependsOnMethod ile Testleri bir birinin Passed olmasına göre çalışmasını istemeye yarar.
+
+    @Test
+    public void test1() {
+        //amazon ana sayfasına git
+        driver.get("https://amazon.com");
+    }
+    @Test(dependsOnMethods = "test1") 					//test1 çalışmazsa bu testin(test2) çalışmasın demektir
+    public void test2() {
+        //nutella aratalım
+        driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Nutella", Keys.ENTER);
+    }
+
+    @Test(dependsOnMethods = "test2")					//test2 çalışmazsa bu test(test3) çalışmasın demektir
+    public void test3() {
+        //sonuc yazısının amazon içerdigini test edelim
+        WebElement sonuc = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
+        Assert.assertFalse(sonuc.getText().contains("amazon"));
+    }
+
+
+------------------------------------------------------------------------------------------------------------------------
+		    ::::::::::::::::::::::::::::::: SoftAssert() :::::::::::::::::::::::::::::::
+
+				
+	Açıklama: Assert'te hata oldugunda programın alt satırlarının da calışmasını engeller.
+            	  Fakat SoftAssert'te hata verileni atlar alt satrıları'da çalıştırır
+
+	 SoftAssert softAssert = new SoftAssert(); // ilk SoftAssert objesi tanımlanır
+
+        driver.get("https://amazon.com");
+
+        //burada contains'i bilerek hatalı girdik softAssert'i test etmek için
+        softAssert.assertTrue(driver.getTitle().contains("Amazon123"),"Girdiginiz kelimeyi içermiyor");	   //Hata alabilecegimiz bir kontrol yaptık
+													   //normalde Assert'te hata aldıgında alt satırları kontrol yapmaz
+	//burda arama kutusuna erişebilir oldugunu kontrol ettik (çalışan kod yazdık)			   //ama softAssert ile hata alsada alt satıra geçer.
+        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+        softAssert.assertTrue(aramaKutusu.isEnabled(),"We erişilemez");
+
+	softAssert.assertAll();											//En son bu kodu demek gereklidir.
+														//Eğer demezsek bize hataları bildirmez.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------OOP KONSEPT(POM) İLE FRAMEWROK OLUSTURMA--------------------------------------------------------------				                   
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 	NOT: Bu sisteme TESTNG'ye geçtiğimizde yaptık;
+	     JUNIT'te her classta utilities package'inden extends yaparak driver call yaptık.
+
+Framework Package Düzeni ==>>  src-->test-->java package'inin altına; 1-pages ,2-utilities ,3-testspackage'lerini oluşturuyoruz.
+
+1-pages Package -->>  Bu package altında çalışılacak sitenin adi ile class create edilir.
+		      Class içinde bos constructor olusturup içine  "PageFactory.initElements(Driver.getDriver(),this);" yazılır.
+		      Constructor dışına sitenin kullanılacak elemetleri locate edilir ;     @FindBy(id="twotabsearchtextbox") //iste id ile yap ister xpath ile farketmez
+											     public WebElement aramaKutusu;
+	public class AmazonPage {
+    	public AmazonPage(){
+        PageFactory.initElements(Driver.getDriver(),this);
+    }
+    @FindBy(id="twotabsearchtextbox")
+    public WebElement aramaKutusu;
+}
+
+
+2-utilities Package -->> Bu package'de Driver adında class oluşturduk
+			 
+		      
+
+
+
 
