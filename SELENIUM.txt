@@ -856,7 +856,7 @@ Aşağıdaki kodda ilk hepsiburada,ikinci bestbuy,üçüncü youtube,dördüncü
  	NOT: Bu sisteme TESTNG'ye geçtiğimizde yaptık;
 	     JUNIT'te her classta utilities package'inden extends yaparak driver call yaptık.
 
-Framework Package Düzeni ==>>  src-->test-->java package'inin altına; 1-pages ,2-utilities ,3-testspackage'lerini oluşturuyoruz.
+Framework Package Düzeni ==>>  src-->test-->java package'inin altına; 1-pages ,2-utilities ,3-tests package'lerini oluşturuyoruz. CLASSLARIN İÇERİĞİ AŞAĞIDA MEVCUTTUR.
 
 1-pages Package -->>  Bu package altında çalışılacak sitenin adi ile class create edilir.
 		      Class içinde bos constructor olusturup içine  "PageFactory.initElements(Driver.getDriver(),this);" yazılır.
@@ -872,9 +872,197 @@ Framework Package Düzeni ==>>  src-->test-->java package'inin altına; 1-pages 
 
 
 2-utilities Package -->> Bu package'de Driver adında class oluşturduk
+			 Bu package altında: ConfigReader,Driver,TestBaseBeforeClassAfterClass,TestBaseBeforeMethodAfterMethod adında classlar olusturduk.
 			 
-		      
+			 
+3-tests Package -->> Bu package'de testlerin yer aldığı class lar bulunur			 
+			 
+ConfigReader CLASS İÇERİĞİ : 
 
+package utilities;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+public class ConfigReader {
+    private static Properties properties;
+    static{      //buranın herşeyden önce çalışması için static bloğa aldık
+        String path="configuration.properties";   //configuration.properties dosyasının yolunu aldık
+        try{
+            FileInputStream fis = new FileInputStream(path);
+            properties=new Properties();
+            properties.load(fis);  //fis'in okudugu bilgileri properties'e yükledi
+
+            fis.close();
+        }  catch (IOException e) {
+            //    e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    public static String getProperty(String key){
+        /*
+Test methodundan yolladigimiz String key degerini alip properties classindan
+getProperty() methodunu kullanarak bu key'e ait value'yu bize getirir
+ */
+        return properties.getProperty(key);
+    }
+}
+
+
+Driver CLASS İÇERİĞİ :
+
+package utilities;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import java.time.Duration;
+
+public class Driver {
+    private Driver() {
+ /*
+        SingletonPattern : tekli kullanım demektir. Bir class'ın farklı class'lardan
+        obje oluşturarak kullanımını engellemektir.
+        Bunu da buradaki gibi private constructor yapmaktır
+
+         */
+    }
+    static WebDriver driver;
+    public static WebDriver getDriver(){
+
+        if (driver==null){                                  //driver'i bir kere calistirir(browser 1 kere açılır)
+            switch (ConfigReader.getProperty("browser")){
+
+                case "edge":
+                    WebDriverManager.edgedriver().setup();
+                    driver=new EdgeDriver();
+                    break;
+                case "firefox":
+                    WebDriverManager.firefoxdriver().setup();
+                    driver=new FirefoxDriver();
+                    break;
+                case "headless-chrome":
+                    WebDriverManager.chromedriver().setup();
+                    driver=new ChromeDriver(new ChromeOptions().setHeadless(true));
+                    break;
+                default:
+                    WebDriverManager.chromedriver().setup(); //hiç birşey çalışmazsa chrome calışsın
+                    driver=new ChromeDriver();
+            }
+        }
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        return driver;
+    }
+    public static void closeDriver(){
+        if (driver!=null) {
+            driver.close();
+            driver=null; //kapandıktan sonra driveri tekrar açılmasında problem olmaması için null yaptık
+        }
+    }
+    public static void quitDriver(){
+        if (driver!=null){
+            driver.quit();
+            driver=null;
+        }
+    }
+}
+
+
+TestBaseBeforeCLassAfterClass İÇERİĞİ :
+
+package utilities;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+
+import java.time.Duration;
+
+public class TestBase_BeforeClass_AfterClass {
+
+    protected static WebDriver driver;
+
+    @BeforeClass
+    public static void setup(){
+        WebDriverManager.chromedriver().setup();
+        driver =new ChromeDriver();
+        driver.manage().window().maximize();
+       driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+    @AfterClass
+    public static void tearDown(){
+        driver.close();
+    }
+
+}
+
+
+TestBaseBeforeMethodAfterMethod İÇERİĞİ :
+
+package utilities;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public abstract class TestBaseBeforeMethodAfterMethod {// obje oluşturulmasını engellemek için abstract yaptık
+
+    protected WebDriver driver;
+ //   protected Actions actions;
+    protected String tarih;
+
+    @BeforeMethod
+    public void setUp(){
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    //    actions = new Actions(driver);
+
+        LocalDateTime date = LocalDateTime.now(); // PrintScreen yaptıgımızda tarih saati fotonun ismi yapmak için olusturduk
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("YYMMddHHmmss");
+        tarih = date.format(formater);
+    }
+    @AfterMethod
+    public void tearDown(){
+        driver.close();
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+							::::::::::::::::::::::::::SIGNLETONPATTERN::::::::::::::::::::::::::::::::::
+Bu konu bir classta obje olusturulmasını engellemek icin yapılır. BUnun için obje oluşturulması istenilmeyen class'ta bos constructor oluşturulur ve private olarak
+yapılır. private sebebiyle diğer classlar construstor olusturamaz. Bunu utilities içindeki Driver class'ı için kullanırız.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		    ::::::::::NEGATİF ve POZİTİF TEST  //   SMOKENEGATİF ve SMOKEPOZİTİF TESTLER:::::::
+NEGATİF TEST : Bu testte 1 notasyon olur :  1- Kullanıcı ve Parola yanlış
+POZİTİF TEST : Bu testte 1 notasyon olur :  1- Kullanıcı ve Parola doğru
+		    
+SMOKENEGATİF TEST : Bu testte 3 test notasyonu olusturulur : 1- Kullanıcı adi ve parola yanlış		    
+							2- kulanıcı adi dogru parola yanlış
+							3- Kullanıcı adi yanlış parola doğru
+SMOKEPOZİTİF TEST : Bu testte 1 test notasyonu olur : 	1- Kullanıcı ad ve parola doğru olan notasyon							
 
 
 
