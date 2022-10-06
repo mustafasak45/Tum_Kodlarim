@@ -414,6 +414,12 @@ KULLANIMI: Siteye giriş(driver.get()) kodundan hemen sonra;
 							   String variableAdi = driver.getWindowHandle();
 	   Handle edilen siteye dönme kodu;
 				           driver.switchTo().window(variableAdi);
+					   
+BÜTÜN WİNDOWLARI HANDLE ETMEK İÇİN:(List Olarak)
+
+		ArrayList<String> pencereler = new ArrayList<>(Driver.getDriver().getWindowHandles());
+        	Driver.getDriver().switchTo().window(pencereler.get(1));
+		
 		:::::::::::::::::::SAYFAYI TAB'da(Yeni Sekmede) ve FARKLI PENCEREDE AÇMAK İÇİN::::::::::::::::::
 
 !!!!Açılacak siteye girmeden önce yaz!!!!
