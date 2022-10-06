@@ -1055,7 +1055,8 @@ Bu konu bir classta obje olusturulmasını engellemek icin yapılır. BUnun içi
 yapılır. private sebebiyle diğer classlar construstor olusturamaz. Bunu utilities içindeki Driver class'ı için kullanırız.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		    ::::::::::NEGATİF ve POZİTİF TEST  //   SMOKENEGATİF ve SMOKEPOZİTİF TESTLER:::::::
+		    :::::::::::::::::::::NEGATİF ve POZİTİF TEST  //   SMOKENEGATİF ve SMOKEPOZİTİF TESTLER:::::::::::::::::
+		    
 NEGATİF TEST : Bu testte 1 notasyon olur :  1- Kullanıcı ve Parola yanlış
 POZİTİF TEST : Bu testte 1 notasyon olur :  1- Kullanıcı ve Parola doğru
 		    
@@ -1065,4 +1066,106 @@ SMOKENEGATİF TEST : Bu testte 3 test notasyonu olusturulur : 1- Kullanıcı adi
 SMOKEPOZİTİF TEST : Bu testte 1 test notasyonu olur : 	1- Kullanıcı ad ve parola doğru olan notasyon							
 
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				::::::::::::::::::::::::::::::::::XML FILE :::::::::::::::::::::::::::::::::::::
+				
+KULLANIŞ ŞEKLİ: -İnteliJ'de src packagesinde sağtıkla
+		-New File-->dosyaadi.xml
+		-OLuşturduğumuz dosyanın içine ilk "<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >" tagını yapştırıyoruz
+		-Sırayla aşağıdaki tagları oluşturuyoruz.
+		<suite name="test"> 
+		   <test name="classlar">
+		   
+		   </test>
+		</suite>
+		
+------------------------------------------------------------------------		
+::::::::Belirli Classları Çalıştırma ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+		<suite name="test"> 
+		   <test name="classlar">
+		   	<classes>
+            			<class name="tests.day16_Priority_DepensOnMethod_BeforeAfter.C03_Priority"/>
+            			<class name="tests.day20_SmokeTest.C03_E2ETest"/>
+        	        </classes>
+		   </test>
+		</suite>
+------------------------------------------------------------------------
+::::::::Belirli Packageleri Çalıştırma ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+		<suite name="test"> 
+		   <test name="classlar">
+		   	<packages>
+            		 	<package name="tests.day20_SmokeTest"/>
+        		</packages>
+		   </test>
+		</suite>
+------------------------------------------------------------------------		
+::::::::İstenen Methodları Çalıştırma ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+		<suite name="test"> 
+		   <test name="classlar">
+		   	<classes>
+			
+			    <class name="tests.day16_Priority_DepensOnMethod_BeforeAfter.C03_Priority">
+			      <methods>
+                    		  <include name="bestbuyTest"/>      <!--dahil etmektir sadece bu classdaki bu methodu çalıştırır -->
+                	       </methods>
+			    </class>
+			    
+			    <class name="tests.day16_Priority_DepensOnMethod_BeforeAfter.C02_BeforeClassAfterClass">
+                	       <methods>
+                    		   <exclude name="testamazonTesti"/>      <!--hariç tutmaktır bu classdaki bu notasyon dışında bütün classı çalıştırır-->
+                		</methods>
+                            </class>
+			    
+			</classes>
+		   </test>
+		</suite>
+------------------------------------------------------------------------
+:::::::: Tüm Testleri Çalıştır ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+		<suite name="tum Packageler">
+    			<test name="regression">
+          			<packages>
+              				<package name="tests.*"></package>
+          			</packages>
+    			</test>
+		</suite>
+		
+------------------------------------------------------------------------		
+:::::::: Paralel Testleri Çalıştır ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" > <!--Buraya   https://testng.org/doc/documentation-main.html#testng-xml  adresinden aldık-->
+		<suite name="allTests" verbose="3" parallel="classes" thread-count="3">  <!--paralel ile paralel test çalıştırılır-->
+    			<test name="regresyon">						 <!--thread-count ile kac tane browser açılacağını belirleriz-->
+        			<packages>						 <!--verbose ile verilecek bilginin sayısını belirleriz-->
+           	 			<package name="tests.day20_SmokeTest"/>
+        			</packages>
+    			</test>
+		</suite>
+------------------------------------------------------------------------		
+:::::::: Belirlediğim Group İsimlerini Çalıştır ::::::::  !!!!!!! DOSYAYI YAZDIKTAN SONRA CTRL+S YAPMAYI UNUTMA !!!!!!
+------------------------------------------------------------------------
+Bunu Çalıştırmak için @Test(groups = "grup1") veya @Test(groups = {"grup1","grup2"}) şeklinde grup adı tanımlanabilir
 
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+	<suite name="Istenen Gruplari Calistirma">
+    		<test name="belirli gruplar">
+        		<groups>
+            		   <run>
+                		<include name="grup1"/><!--grup1 olanları çalıştır ama grup2 olanları çalıştırma-->
+                			<exclude name="grup2"/>		<!--day18_ConfigurationProperties packagedeki
+                            						C03_ConfigReader_hotelmycamp classındaki methodda iki grupta tanımlı oldugu için çalışmaz-->
+            		   </run>
+        		</groups>
+        	<packages>		<!-- hangi package çalışması gerekitiğini bu şekilde muhakkkak yazz-->
+            		<package name="tests.day18_ConfigurationProperties"/>
+            		<package name="tests.SerbestCalisma"/>
+        	</packages>
+		</test>
+     </suite>
+
+
+
+		
