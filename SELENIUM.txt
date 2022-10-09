@@ -427,6 +427,7 @@ BÜTÜN WİNDOWLARI HANDLE ETMEK İÇİN:(List Olarak)
 		        driver.switchTo().newWindow(WindowType.TAB); 	 //Tabda açar
 		        driver.switchTo().newWindow(WindowType.WINDOW);  //Yeni pencerede açar
       
+      Driver.getDriver().switchTo().window(trendyolHandle).close();      // trendyolHandle variablesine atanan handle degeri ile switchTo yapıp kapatmak
 
 ------------------------------------------------------------------------------------------------------------------------
 	::::::::::::::::::::::::::::ACTIONS(Mouse/Klavye hareketleri):::::::::::::::::::::::::::
