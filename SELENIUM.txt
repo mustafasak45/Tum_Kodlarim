@@ -1172,6 +1172,9 @@ Bunu Çalıştırmak için @Test(groups = "grup1") veya @Test(groups = {"grup1",
         	</packages>
 		</test>
      </suite>
+     
+     
+     
 
 
 
