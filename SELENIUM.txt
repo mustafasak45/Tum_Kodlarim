@@ -1231,8 +1231,33 @@ Buradaki; parallel="tests" çalıştırılacak olanın 'classes,tests,metods vs.
         </classes>
     </test>
 </suite>
-     
+  
+  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		                     :::::::::::::::::::::::::::::TESTNG'DE RAPOR ALMAK:::::::::::::::::::::::::::::
 
+1-utilities package'inda TestBaseRapor adında oluturulan class sayesinde raporlar alınır.
+2-TestBaseRapor clasıyla target packagesi altındaki Rapor packagesi olusur ve raporlar oraya kaydeder.
+3-Rapor alınacak classa TestBaseRapor classı extends edilir.
 
+ @Test
+    public void test01() {
+        extentTest=extentReports.createTest("BlueRentalCars sitesi testi","Kullanıcı adı şifre doğru girilip giriş yapılıması kontrolu");
+	
+        Driver.getDriver().get(ConfigReader.getProperty("bluerentalCarsUrl"));
+        extentTest.info("Siteye girildi");				//Her stepten sonra bu şekilde bilgi girişi sağlanır, rapora bu şekilde yansır
 
-		
+        BlueRentACarsPage blueRentalcarsPage=new BlueRentACarsPage();
+        blueRentalcarsPage.loginButton.click();
+        extentTest.info("Login butonuna tıklandı");			//Her stepten sonra bu şekilde bilgi girişi sağlanır, rapora bu şekilde yansır
+
+        blueRentalcarsPage.emailTextbox.sendKeys(ConfigReader.getProperty("emailBlueRentalCars"),
+                                                Keys.TAB,ConfigReader.getProperty("passwordBlueRentalCars"),
+                                                Keys.ENTER);
+        extentTest.info("Kullanıcı adı şifre başarıyla girildi");	//Her stepten sonra bu şekilde bilgi girişi sağlanır, rapora bu şekilde yansır
+
+        Assert.assertTrue(blueRentalcarsPage.ddm.isDisplayed());
+        extentTest.info("Giriş Başarılı");				//Her stepten sonra bu şekilde bilgi girişi sağlanır, rapora bu şekilde yansır
+    }
+    
+    NOT: Oluşan Raporu taget/Rapor packageleri altına kaydeder.
