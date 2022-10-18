@@ -494,11 +494,17 @@ KODLARI :  WebElement textBoxName = driver.findElement(By.xpath("//*[@name='firs
 
 ------------------------------------------------------------------------------------------------------------------------
 	:::::::::::::::::::::::::::::::::Siteye dosya yükleme(File Upload):::::::::::::::::::::::::::::::::::::: 
+	
+//1. Yöntem
 
         WebElement chooseFile = driver.findElement(By.xpath("//*[@id='file-upload']"));//dosya yükleme butonunu locate ettik
         String dosyaYolu = "C:\\Users\\myComputer\\Downloads\\test.txt";               //yüklenecek dosya yolunu locate ettik
         chooseFile.sendKeys(dosyaYolu);  					       //butona dosya yolunu sendKeys yaptık
 
+//2. Yöntem (DİNAMİK)
+        String homeDricetory = System.getProperty("user.home"); //C:\\Users\\myComputeR\ dizini her pcde değiştiği için dinamik olarak bu kullanılır
+        String filePath=homeDricetory+"/Desktop/test.txt";	//masaüstünde test.txt dosyası var
+        practiceFormPage.chooseFile.sendKeys(filePath);		//practiceFormPage.chooseFile locate edilmiş webelement
 
 ------------------------------------------------------------------------------------------------------------------------
 		::::::::::::::::::::::::::::::.COOKIES(ÇEREZLER):::::::::::::::::::::::::::::::::::::::::
