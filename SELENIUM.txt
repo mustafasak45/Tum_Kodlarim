@@ -1269,15 +1269,18 @@ Buradaki; parallel="tests" çalıştırılacak olanın 'classes,tests,metods vs.
     NOT: Oluşan Raporu taget/Rapor packageleri altına kaydeder.
     
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------------------------------------------------------------------------------
         					:::::::::::::::::::::::::::::Listeners Class'ı:::::::::::::::::::::::::::::
 							---------------(TESTNG'de kullanılır)----------------------
 	Bu classın amacı @Test'lerin Pass/Fail/Ignore/Bütün Testlerin başında/class çalışmaya başlarken/class çalışması bittikten sonra, yazılmak istenen kodun çalıştırılması için kullanılır.						
 							
 	1-utilities package altında Listeners classı açılır ve ITestListener interfacesine implements edilir
-	2-Çalıştırılacak classın başında importlardan sonra '@Listeners(utilities.Listeners.class)' kodu yazılır.
-	3-Listeners Classı içine aşağıdaki methodlar override edilir(İntelij deki classın tamamı açıklamalarıyla aşağıda);
-		
-    package utilities;
+	2-Çalıştırılacak classın; importlardan sonra, public class Class_adi'dan önce @Listeners(utilities.Listeners.class) kodu yazılır.
+	3-Listeners Classı içine aşağıdaki methodlar override edilir(İntelij deki classın tamamı methodların açıklamalarıyla aşağıdadır);
+	
+:::::::::::::::::Listeners Classı::::::::::::::::::
+
+package utilities;
 
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -1332,11 +1335,52 @@ public class Listeners implements ITestListener { // ilk implements ITestListene
 }
 
 
+:::::::::::::::::::::::::CLASSIN KODU::::::::::::::::::::::::::
+
+package tests;
+import org.testng.Assert;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+import utilities.Driver;
+
+@Listeners(utilities.Listeners.class)//Listeners classı ile burada bağlatı kurduruyoruz
+                                    //listeners classındaki methodları tektek kontrol edip testlerin Fail/Pass/Ignore
+                                    //durumuna göre çalıştırıyor
+public class ListenersTest2 {
+    //bu classı test Fail olduğunda ekran fotosu aldıgını kontrol etmek için yaptım
+    @Test
+    public void test01() {
+        //1-amazon anasayfaya gidin
+        Driver.getDriver().get("https://amazon.com");
 
 
-	
-	
-	
+        //2-title in Amazon içerdigini test edin
+        Assert.assertTrue(Driver.getDriver().getTitle().contains("Amazon1"));
+          }
+}
+
+::::::::::::::::listeners.xml DOSYASI::::::::::::::::::
+Proje seviyesinde listeners.xml adında dosya oluşturulur. İçine aşağıdaki kodlar eklenir;
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+
+  <listeners><!--listeners ları test classlara baglamak icin kullanilir-->
+      <!--       utilities packagesindeki listeners classının path          -->
+      <listener class-name="utilities.Listeners"></listener>
+  </listeners>
+
+    <test verbose="2" preserve-order="true"
+          name="C:\Users\myComputeR\IdeaProjects\com.Batch81TestNG_Dersdeki_Projeler\src\test\java\tests\ListenersTest2.java">
+        <!--Ust satırdaki adresi ListenerTest2 adında olusturdugumuz clasın yolunu aldık(Absolote path olarak kopyala)-->
+        <classes>
+            <class name="tests.ListenersTest2">
+            </class>
+        </classes>
+    </test>
+</suite>
+
 	
 						
 						
