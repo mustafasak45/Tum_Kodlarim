@@ -1414,15 +1414,65 @@ public class Hooks {  //TC de fail aldığımızda raporda ekran fotosu almak i�
  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 						::::::::::::::::::CUCUMBERDA RAPOR ALMAK::::::::::::::::::::::
-	1- Test çalıştırılır
-	1-resources package içinde cucumber.properties adinda file oluşturulur.
+	:::::::::::::1. YÖNTEM:::::::::::::
 	
-						
+	1- Test çalıştırılır
+	2- Altdaki Run kısmının yanında çıkan mesajların içinde kare içine alınmış ve içinde 2 tane link bulunan yere gelinir
+	3- Üstteki link raporun linkidir ve tıklanır.
+	4- Açılan internet sayfasında sağ üstte Log in with Github buttonu gelir(Rapoları github a kaydetmek için giriş yapma butonu) ve ona tıklanır
+	5- Bize github da olışturulmak istenen kollaksiyon adını sorar ve oraya bir isim girilir
+	6- Sonra buze CUCUMBER_PUBLISH... diye devam eden bir kod verir onu kopyala
+	7- İnteliJ'deki projede src/test/resources package altına cucumber.properties adında File oluşturulur
+	8- içine testi çalıştırdıgımıda run da gelen kare içerisindeki yazılardan cucumber.publish.enabled=true olan ilk satır kopyalalnıp cucumber.properties dosyasına yapıştırılır, sonrada 6. adımdaki kod satırı cucumber.properties'in 2. satırına yapıştırılır ve save All yapılır. Çekice bir kere bas.
+	9- Test featureden veya Runner'dan çalışrılır
+	10- Altdaki Run bölmünde kare içerisinde sadece 1 tane link vardır ve ona tıklanır.
+	11- Chorome'de cucumber.properties'de belirtilen kolleksiyonun kodunun olduğu yere(6.maddedeki kod) kayıtlı olarak rapor gelir.
+	12- Eğer test fail olursa ve ekran resmi alsın diye de Hooks classı stepDefinitons packagesine atılır. böylece raporda Screenshoot da gelir.
+	ÖNEMLİ NOT: Herhangibir yerde problem olursa çekice bas.
+	
+2-madde deki kare bu şekilde dir.
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│ Share your Cucumber Report with your team at https://reports.cucumber.io          │
+│ Activate publishing with one of the following:                                    │
+│                                                                                   │
+│ src/test/resources/cucumber.properties:          cucumber.publish.enabled=true    │
+│ src/test/resources/junit-platform.properties:    cucumber.publish.enabled=true    │
+│ Environment variable:                            CUCUMBER_PUBLİSH_ENABLED=true    │
+│ JUnit:                                           @CucumberOptions(publish = true) │
+│                                                                                   │
+│ More information at https://cucumber.io/docs/cucumber/environment-variables/      │
+│                                                                                   │
+│ Disable this message with one of the following:                                   │
+│                                                                                   │
+│ src/test/resources/cucumber.properties:          cucumber.publish.quiet=true      │
+│ src/test/resources/junit-platform.properties:    cucumber.publish.quiet=true      │
+└───────────────────────────────────────────────────────────────────────────────────┘
 
-:::::::::::Runner CLassından Almak için(Feature veya Scenario basına yazılan tags sayesinde Runner Classıyla çalıştırılır):::::::::
+10-maddedeki kare bu şekildedir
+┌──────────────────────────────────────────────────────────────────────────┐
+│ View your Cucumber Report at:                                            │
+│ https://reports.cucumber.io/reports/4fc1cc6e-9188-4937-b731-07beb90fd1ee │
+│                                                                          │
+│ This report was published in collection "sil"                            │
+
+Process finished with exit code -1
+└──────────────────────────────────────────────────────────────────────────┘
+GİTHUB' DA RAPORLRIN KAYIT EDİLDİĞİ YER:
+1-Kendi githubına gir
+2-Sağ tarafdaki ikona tıkla açlan menude Settings'i seç
+3-Sol taraftaki menüden Applications'e tıkla
+4-Açılan yerde Authorized OAuth Apps' tıkla
+5-Cucumber Reports'a tıkla
+6-https://reports.cucumber.io yazan linki bul ve tıkla
+	
+	
+	:::::::::::::2. YÖNTEM:::::::::::::
+	
+Runner CLassından Almak için(Feature veya Scenario basına yazılan tags sayesinde Runner Classıyla çalıştırılır)
+
+::::Runner Classının içeriği::::
 
 package runners;
-
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -1445,9 +1495,7 @@ import org.junit.runner.RunWith;
         tags = "@US016",                //@Background yazan feature'yi calistirir
         dryRun = false                        //true yapınca browser'i calistirmadan test eder
 )
-
 public class Runner {
-
     /*
 Runner Class'i TestNG'deki XML mantigi ile calisir
 Calistirmak istedigimiz senaryolari tag belirtiriz
@@ -1465,12 +1513,7 @@ dryRun: 2 secenek vardir
 a-)dryRun=true --> dersek testimizi calistirmadan eksik adimlari bize verir
 b-)dryRun=false-->Testlerimizi drive ile calistirir
  */
-
 }
-
-
-
-
 
 						
 						
