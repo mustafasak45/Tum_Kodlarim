@@ -1413,7 +1413,11 @@ public class Hooks {  //TC de fail aldığımızda raporda ekran fotosu almak i�
 
  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-						::::::::::::::::::CUCUMBERDE RAPOR ALMAK::::::::::::::::::::::
+						::::::::::::::::::CUCUMBERDA RAPOR ALMAK::::::::::::::::::::::
+	1- Test çalıştırılır
+	1-resources package içinde cucumber.properties adinda file oluşturulur.
+	
+						
 
 :::::::::::Runner CLassından Almak için(Feature veya Scenario basına yazılan tags sayesinde Runner Classıyla çalıştırılır):::::::::
 
@@ -1436,7 +1440,7 @@ import org.junit.runner.RunWith;
             "junit:target/xml-report/cucumber.xml" },    //Belirtilen adrese xml formatın rapor verir
 
         features = "src/test/resources/features",
-        glue = "stepDefinetions",
+        glue = "stepDefinitions",
         //tags = "@gp1 or @gp2",              //gruplandırma yaptık @gp1 or @gp2 adında
         tags = "@US016",                //@Background yazan feature'yi calistirir
         dryRun = false                        //true yapınca browser'i calistirmadan test eder
