@@ -215,6 +215,10 @@ TEXT'den xpath almak için : //*[text()='Click here to go to amazon.com.tr']
 rel'den xpath almak için :  //*[@rel='noopener']
 class'dan xpath almak için : //*[@class='a-size-base a-link-normal']
 
+
+xpath ile starts-with kullanarak almak için: //a[starts-with(@id,'login')]  //a tagının içinde normalde id bu şekilde; id="login-item" . id'si login ile baslayanı bul 							demektir.  
+xpath ile contains kullanarak almak için: //a[contains(@class,"get-started")]  //<a href="#appointment" class="btn-get-started scrollto">Get Started</a>
+
 ------------------------------------------------------------------------------------------------------------------------
 					::::::::::@Before/@After:::::::::
 
