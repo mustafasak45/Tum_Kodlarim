@@ -1,0 +1,450 @@
+*******************************************************************************************************************************************************************
+******************************************************* Json Path kullanarak doğrulama Yöntemi*********************************************************************
+						        JsonPath() json = response.JsonPath();
+
+-----------------------------------------------------------------------
+-------------------------------TASK:-----------------------------------
+ /*
+        Given
+          https://reqres.in/api/unknown/3
+        When
+            User send a GET request to the URL
+        Then
+            HTTP Status Code should be 200
+        And
+            Response content type is "application/json; charset=utf-8"
+        And
+            Response body should be like;(Soft Assertion)
+        {
+        "data": {
+            "id": 3,
+            "name": "true red",
+            "year": 2002,
+            "color": "#BF1932",
+            "pantone_value": "19-1664"
+        },
+        "support": {
+            "url": "https://reqres.in/#support-heading",
+            "text": "To keep ReqRes free, contributions towards server costs are appreciated!"
+        }
+}
+      */
+
+-----------------------------------------------------------------------
+----------------------BASE_URL CLASSININ KODLARI:----------------------
+
+package base_urls;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
+
+public class ReqresBaseUrl {
+
+    protected RequestSpecification spec;
+
+    @Before
+    public void setup(){
+        spec=new RequestSpecBuilder().setBaseUri("https://reqres.in/api").build();
+    }
+}
+
+-----------------------------------------------------------------------
+-------------------GET REQUEST YAPILACAK CLASSIN KODLARI:--------------
+
+package get_request;
+
+import base_urls.ReqresBaseUrl;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import org.junit.Test;
+import org.testng.asserts.SoftAssert;
+
+import static io.restassured.RestAssured.given;
+
+public class Get05b_JsonPath extends ReqresBaseUrl {    
+
+    @Test
+    public void test05(){
+
+        spec.pathParams("first","unknown","second",3);
+
+        Response response=given().spec(spec).when().get("/{first}/{second}");
+        response.prettyPrint();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        JsonPath jsonPath=response.jsonPath();
+       // jsonPath.prettyPrint();
+
+        softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertEquals(response.contentType(), "application/json; charset=utf-8");
+        softAssert.assertEquals(jsonPath.getInt("data.id"),3,"id degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getString("data.name"),"true red","name degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getInt("data.year"),2002,"year degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getString("data.color"),"#BF1932","color degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getString("data.pantone_value"),"19-1664","pantone_value degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getString("support.url"),"https://reqres.in/#support-heading","url degeri dogru degil");
+        softAssert.assertEquals(jsonPath.getString("support.text"),"To keep ReqRes free, contributions towards server costs are appreciated!","text degeri dogru degil");
+        softAssert.assertAll();
+
+	//NOT: Burada softassert kullanılması kafa karıştırmasın hardassert de yapılabilir
+
+    }
+}
+
+
+*******************************************************************************************************************************************************************
+******************************************************** De-Serialization: JSON formatını Javaya dönüştürme******************************************************** 
+       						 HashMap<String, Object> actualData = response.as(HashMap.class);
+
+
+-----------------------------------------------------------------------
+-------------------------------TASK:-----------------------------------
+ /*
+    Given
+        https://restful-booker.herokuapp.com/booking/91
+    When
+        I send GET Request to the url
+    Then
+        Response body should be like that;
+  {
+    "firstname": "Sally",
+    "lastname": "Brown",
+    "totalprice": 111,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2018-01-01",
+        "checkout": "2019-01-01"
+    },
+    "additionalneeds": "Breakfast"
+  }
+ */
+
+-----------------------------------------------------------------------
+----------------------BASE_URL CLASSININ KODLARI:----------------------
+
+package base_urls;
+
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
+
+public class RestfulBaseUrl {
+    protected RequestSpecification spec;
+
+    @Before
+    public void setUp(){
+        spec = new RequestSpecBuilder().setBaseUri("https://restful-booker.herokuapp.com").build();
+    }
+}
+
+-----------------------------------------------------------------------
+-------------------GET REQUEST YAPILACAK CLASSIN KODLARI:--------------
+
+package get_request;
+
+import base_urls.RestfulBaseUrl;
+import io.restassured.response.Response;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.restassured.RestAssured.*;
+import static org.junit.Assert.assertEquals;
+
+public class Get09_Dinamik_MapCasting extends RestfulBaseUrl {
+  
+    @Test
+    public void get09(){
+
+        spec.pathParams("first","booking","second",91);
+
+//İNNER MAP
+        Map<String,String> bookingdatesMap = new HashMap<>(); //buradaki map, inner olarak kullanılacak verileri tutmak için oluşturduk
+        bookingdatesMap.put("checkin","2013-02-23");
+        bookingdatesMap.put("checkout","2014-10-23");
+
+//OUTER MAP
+        Map<String,Object> expectedData = new HashMap<>();  //buradaki map, outer olarak kullanılan verileri tutmak içi oluşturduk
+        expectedData.put("firstname","Sally");
+        expectedData.put("lastname","Brown");
+        expectedData.put("totalprice",111);
+        expectedData.put("depositpaid",true);
+        expectedData.put("bookingdates",bookingdatesMap);
+        expectedData.put("additionalneeds","Breakfast");
+
+       // System.out.println(expectedData);
+
+        Response response=given().spec(spec).when().get("/{first}/{second}");
+
+        response.prettyPrint();  						//	responseyi ekrana yazdırır
+
+//De-Serialization
+        Map<String,Object> actualData = response.as(HashMap.class); //responseden dönen verilerin tipine göre map oluştur<String,Object> ve responseyi HasMap gibi yap
+
+//ASSERT
+        assertEquals(expectedData.get("firstname"),actualData.get("firstname"));
+        assertEquals(expectedData.get("lastname"),actualData.get("lastname"));
+        assertEquals(expectedData.get("totalprice"),actualData.get("totalprice"));
+        assertEquals(expectedData.get("depositpaid"),actualData.get("depositpaid"));
+        assertEquals(bookingdatesMap.get("checkin"),((Map)(actualData.get("bookingdates"))).get("checkin"));//Key-Value ikilileri String-Object şeklinde olduğundan, Bookingdata value kısmını casting ile Map yaptık.
+        assertEquals(bookingdatesMap.get("checkout"),((Map)(actualData.get("bookingdates"))).get("checkout"));//Key-Value ikilileri String-Object şeklinde olduğundan, Bookingdata value kısmını casting ile Map yaptık.
+
+    }
+}
+
+*******************************************************************************************************************************************************************
+********************************************* Serialization: Java yapısında olan dataları JSON'a dönüştürme********************************************************
+       								 Gson gson = new Gson();
+        							 String jsonFromJava = gson.toJson(actual);
+
+
+
+
+*******************************************************************************************************************************************************************
+******************************************************************************** JSON Object***********************************************************************
+        					JsonPlaceHolderTestData testObje = new JsonPlaceHolderTestData();
+        					JSONObject expectedRequest = testObje.setUpPostData();
+
+
+
+
+*******************************************************************************************************************************************************************
+**************************************************************** Pojo Class (Plain Old Java Object)****************************************************************
+
+-----------------------------------------------------------------------
+-------------------------------TASK:-----------------------------------
+
+      /*
+        Given
+            https://gorest.co.in/public/v1/users/2508
+        When
+            User send GET Request to the URL
+        Then
+            Status Code should be 200
+        And
+            Response body should be like
+          {
+            "meta": null,
+            "data": {
+                "id": 2508,
+                "name": "Sharmila Deshpande VM",
+                "email": "deshpande_sharmila_vm@becker.name",
+                "gender": "female",
+                "status": "active"
+                 }
+          }
+    */
+
+
+-----------------------------------------------------------------------
+----------------------BASE_URL CLASSININ KODLARI:----------------------
+
+package base_urls;
+
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
+
+public class GoRestBaseUrl {
+
+        protected RequestSpecification spec;
+
+    @Before
+    public void setup(){
+        spec=new RequestSpecBuilder().setBaseUri("https://gorest.co.in/public/v1").build();
+    }
+}
+
+
+-----------------------------------------------------------------------
+-------------------GET REQUEST YAPILACAK CLASSIN KODLARI:--------------
+
+package get_request;
+import base_urls.GoRestBaseUrl;
+import io.restassured.response.Response;
+import org.junit.Test;
+import pojos.GoRestDataPojo;
+import pojos.GoRestMetaPojo;
+import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+
+public class Get13Pojo extends GoRestBaseUrl {  
+
+    @Test
+    public void get13() {
+        spec.pathParams("first","users","second",2508);
+
+        GoRestDataPojo gorestDataPojo = new GoRestDataPojo(2508,"Sharmila Deshpande VM","deshpande_sharmila_vm@becker.name","female","active");
+        GoRestMetaPojo expData = new GoRestMetaPojo(null,gorestDataPojo);
+
+        Response response = given().spec(spec).when().get("/{first}/{second}");
+
+        GoRestMetaPojo actData = response.as(GoRestMetaPojo.class);
+
+        assertEquals(expData.getMeta(),actData.getMeta());
+        assertEquals(expData.getData().getId(),actData.getData().getId());
+        assertEquals(expData.getData().getName(),actData.getData().getName());
+        assertEquals(expData.getData().getEmail(),actData.getData().getEmail());
+        assertEquals(expData.getData().getGender(),actData.getData().getGender());
+        assertEquals(expData.getData().getStatus(),actData.getData().getStatus());
+
+
+        assertEquals(gorestDataPojo.getId(),actData.getData().getId());
+        assertEquals(gorestDataPojo.getName(),actData.getData().getName());
+        assertEquals(gorestDataPojo.getEmail(),actData.getData().getEmail());
+        assertEquals(gorestDataPojo.getGender(),actData.getData().getGender());
+        assertEquals(gorestDataPojo.getStatus(),actData.getData().getStatus());
+    }
+}
+
+
+-----------------------------------------------------------------------
+------------------------POJO CLASSLARIN KODLARI:-----------------------
+
+NOT: Pojoları Her zaman en içten dışa doğru oluştur!!!!
+
+INNER POJO:
+
+package pojos;
+public class GoRestDataPojo {
+/*    {
+            "meta": null,
+            "data": {
+                "id": 2508,
+                "name": "Sharmila Deshpande VM",
+                "email": "deshpande_sharmila_vm@becker.name",
+                "gender": "female",
+                "status": "active"
+    }
+    }*/
+
+    private Integer id;
+    private String name;
+    private String email;
+    private String gender;
+    private String status;
+
+    public GoRestDataPojo(Integer id, String name, String email, String gender, String status) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.status = status;
+    }
+
+    public GoRestDataPojo() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "GoRestDataPojo{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+}
+
+
+OUTER POJO:
+
+package pojos;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown = true)			//expectedData olarak oluşturduğumuz pojo classta responseden dönen bütün verileri kontrol etmek istemiyorsak tüm dataları 
+public class GoRestMetaPojo {					//private variable olarak tanımlamamıza gerek yoktur.Fakat responseyi De-Serilization yaparken veriler tam uyuşmayacağı için
+    /*    {							//hata verir. Bunu görmezden gelmesi için @JsonIgnoreProperties(ignoreUnknown = true) ile ignoree edilir
+            "meta": null,
+            "data": {
+                "id": 2508,
+                "name": "Sharmila Deshpande VM",
+                "email": "deshpande_sharmila_vm@becker.name",
+                "gender": "female",
+                "status": "active"
+    }
+    }*/
+    private String meta;
+    private GoRestDataPojo data;				//inner pojo classının data tipinde tanımlama yapılır!!!!!
+
+    public GoRestMetaPojo(String meta, GoRestDataPojo data) {
+        this.meta = meta;
+        this.data = data;
+    }
+
+    public GoRestMetaPojo() {
+    }
+
+    public String getMeta() {
+        return meta;
+    }
+
+    public void setMeta(String meta) {
+        this.meta = meta;
+    }
+
+    public GoRestDataPojo getData() {
+        return data;
+    }
+
+    public void setData(GoRestDataPojo data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "GoRestMetaPojo{" +
+                "meta='" + meta + '\'' +
+                ", data='" + data + '\'' +
+                '}';
+    }
+}
+
+
+* ObjectMapper: JSON ve POJO (Plain Old Java Objects) okuma ve yazma işlevlerinin yanı sıra
+        dönüştürmeleri gerçekleştirmek için de kullanılır.
+
+* API den alınan response'ları bilgisayara text dosyası olarak kaydetme ve doğrulama yapma.
+

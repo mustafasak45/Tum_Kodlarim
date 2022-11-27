@@ -1,0 +1,141 @@
+Selenium Grid testlerimizi paralel olarak farklı ortamlarda, farklı tarayıcılarda ve farklı sayılarda koşmamıza 
+imkan sağlayan sunucudur.
+
+Kurulum İçin Yapılacak Adımlar:
+
+1- Masaüstünde 'SeleniumServer' adında klasör oluştur.
+2- www.selenium.dev/downloads adresinden 'Latest stable version 4.6.0' yazan yere tıklayıp indiriyoruz.(verisiyon nosu değişebilir)
+3- İndirilen jar dosyasına masaüstündeki 'SeleniumServer' klasörümüze yapıştırıyoruz.
+4- https://chromedriver.chromium.org/downloads adresine gidip son versiyonu (en üstteki) indiriyoruz.
+   Not:Dersdeki çalışmada son verisiyon çalışmadı bir alt verisiyon olanı(107 ile başlayan) indirdik(chromedriver_win32.zip)
+5- İnen rar dosyasındaki chromedriver'i rardan çıkarıp masaüstündeki 'SeleniumServer' klasörüne atıyoruz.
+6- https://github.com/mozilla/geckodriver/releases adresinden de geckodriver dosyasını indirip 'SeleniumServer' klasörüne atıyoruz.
+7- Sonra Masaüstündeki 'SeleniumServer' klasörüne girip adres çubuğuna cmd yazıyoruz.(Buradaki amaç klasörün içinde cmd yi açmak)
+8- cmd'ye 'java -jar selenium-server-4.6.0.jar standalone' kodunu yazıyoruz.
+9- Eğer hata verirse PC'de kurulu olan javayı ve maven ayarlarını kontrol et.(Java 11 de çalışıyor)
+10-cmd ekranını selenium grid kullandığın sürece kapatma
+11- Javada kod olarak da aşağıdaki gibi ; 
+	edge de çalışmayı istersek; driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new EdgeOptions());
+	chrome de calismayi istersek; driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new ChromeOptions());
+	firefox ta calismayi istersek; driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new FirefoxOptions());
+12-Selenium Griddeki calisan driverleri de http://192.168.1.103:4444 urlsinden bakılabilir
+
+TESTNG KODLARI:
+
+    WebDriver driver;
+    @Test
+    public void test1() throws InterruptedException, MalformedURLException {
+        driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new EdgeOptions());
+        driver.get("https://www.bluerentalcars.com/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        String customerService = driver.findElement(By.xpath("//*[text()='Customer Services']")).getText();
+        System.out.println(customerService);
+        Thread.sleep(3000);
+        System.out.println("Current Thread : "+Thread.currentThread());
+        System.out.println("Blue Rental Title : " + driver.getTitle());
+        driver.quit();
+    }
+ @Test
+    public void test1() throws InterruptedException, MalformedURLException {
+        driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new ChromeOptions());
+        driver.get("https://www.bluerentalcars.com/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        String customerService = driver.findElement(By.xpath("//*[text()='Customer Services']")).getText();
+        System.out.println(customerService);
+        Thread.sleep(3000);
+        System.out.println("Current Thread : "+Thread.currentThread());
+        System.out.println("Blue Rental Title : " + driver.getTitle());
+        driver.quit();
+    }
+ @Test
+    public void test1() throws InterruptedException, MalformedURLException {
+        driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new FirefoxOptions());
+        driver.get("https://www.bluerentalcars.com/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        String customerService = driver.findElement(By.xpath("//*[text()='Customer Services']")).getText();
+        System.out.println(customerService);
+        Thread.sleep(3000);
+        System.out.println("Current Thread : "+Thread.currentThread());
+        System.out.println("Blue Rental Title : " + driver.getTitle());
+        driver.quit();
+    }
+
+
+CUCUMBER KODLARI:
+
+feature kodu;
+
+@cross_browser_test
+Feature: app_title_verification
+  @grid_chrome
+  Scenario: TC01_title_on_chrome
+    Given user is on the application_url "https://www.bluerentalcars.com/"
+    Then verify the page title is "Blue Rental Cars | Cheap, Hygienic, VIP Car Hire"
+    Then close the remote driver
+
+    @grid_fireFox
+  Scenario: TC01_title_on_firefox
+    Given user is on the application_url with Firefox "https://www.bluerentalcars.com/"
+    Then verify the page title is "Blue Rental Cars | Cheap, Hygienic, VIP Car Hire"
+    Then close the remote driver
+
+
+stepdefinitions içindeki class kodu;
+
+public class GridStepDefs {
+    WebDriver driver;
+    @Given("user is on the application_url {string}")
+    public void user_is_on_the_application_url(String url) throws MalformedURLException {
+
+        driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new ChromeOptions());
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+        driver.get(url);
+    }
+    @Then("verify the page title is {string}")
+    public void verify_the_page_title_is(String pageTitle) {
+        String actualTitle = driver.getTitle();
+        String expectedTitle = pageTitle;
+        Assert.assertEquals("Title uyusmadi",expectedTitle,actualTitle);
+    }
+    @Then("close the remote driver")
+    public void close_the_remote_driver() {
+        driver.quit();
+
+    }
+
+    @Given("user is on the application_url with Firefox {string}")
+    public void userIsOnTheApplication_urlWithFirefox(String url) throws MalformedURLException {
+        driver = new RemoteWebDriver(new URL("http://192.168.1.103:4444"),new FirefoxOptions());
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+        driver.get(url);
+    }
+}
+
+
+RunnerGrid class Kodları;
+
+package runners;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        monochrome = true,
+        plugin = {
+                "pretty",
+                "html:target/html-reports/cucumber.html",
+                "json:target/json-reports/cucumber.json",
+                "junit:target/xml-reports/cucumber.xml",
+                "rerun:target/failedRerun.txt"
+        },
+        features = "./src/test/resources/features/GridFeatures/grid_test_case.feature",
+        glue = {"stepDefinetions"},
+        tags = "@cross_browser_test",
+        dryRun = false
+
+)
+public class RunnerGrid {
+}

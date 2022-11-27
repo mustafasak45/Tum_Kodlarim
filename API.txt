@@ -1,0 +1,422 @@
+API DERSİNDE NELER ÖĞRENECEKSİNİZ?
+
+    * POSTMAN
+
+    * Rest Assured: REST API'lerini test etmek ve doğrulamak için kullanılan
+                    Open Source (Açık Kaynak) bir Java kütüphanesidir.
+
+    * Matchers Class kullanarak doğrulama
+      http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/Matchers.html
+
+      Matchers.equalto(): Key-Value şeklinde girilen datanın, eşit olduğunu doğrulamak için kullanılır.
+      Matchers.hasSize(): Datanın size'ını doğrulamak için kullanılır.
+      Matchers.hasItem(): Girilen tek bir data'yı doğrulamak için kullanılır.
+      Matchers.hasItems(): Girilen birden fazla datayı doğrulamak için kullanılır.
+
+    * JUnit ve TestNG Assert'leri kullanılarak doğrulama
+
+    * Json Path kullanarak doğrulama
+        JsonPath() json = response.JsonPath();
+
+    * De-Serialization: JSON formatını Javaya dönüştürme
+        HashMap<String, Object> actualData = response.as(HashMap.class);
+
+    * Serialization: Java yapısında olan dataları JSON'a dönüştürme
+        Gson gson = new Gson();
+        String jsonFromJava = gson.toJson(actual);
+
+    * JSON Object
+        JsonPlaceHolderTestData testObje = new JsonPlaceHolderTestData();
+        JSONObject expectedRequest = testObje.setUpPostData();
+
+    * Pojo Class (Plain Old Java Object)
+
+    * ObjectMapper: JSON ve POJO (Plain Old Java Objects) okuma ve yazma işlevlerinin yanı sıra
+        dönüştürmeleri gerçekleştirmek için de kullanılır.
+
+    * API den alınan response'ları bilgisayara text dosyası olarak kaydetme ve doğrulama yapma.
+
+1) API testlerinde Web Driver kullanıyor musunuz? Hangi dependencies'leri kullanıyorsunuz?
+   API testlerinde, UI testleri için gerekli Web Driver'a ihtiyaç yoktur.
+   Başlangıç için Rest-Assured veye JUnit ve TestNG gibi dependencies'ler yeterli olur.
+
+2) Doğrulama için kullanılan, Hard Assert ve Verification farkları nelerdir?
+   Hard Assert kullandığımızda ilk hata olan yerde test durur.
+   Verification'da; testler hata olsa dahi çalışır. Hatalı olan test için hata mesajı alınır.
+   ÖNEMLİ: Soft Assert = Verification
+
+3) API testlerinde request nasıl tanımlanır?
+   given().when().get() içerisinde tanımlanır.
+
+4) Request'ten gelen cevap (response) nerede saklanır?
+   Response response'un içerisinde.
+
+5) assertThat() Hard mı yoksa Soft Assert müdür?
+   assertThat() Hard assertion'dır.
+
+
+TEST iÇiN KULLANILAN ADRESLER
+
+https://restful-booker.herokuapp.com/booking
+
+https://reqres.in/api/users
+
+http://dummy.restapiexample.com/api/v1/employee
+
+https://jsonplaceholder.typicode.com/
+
+https://www.gmibank.com/api/authenticate
+
+http://www.gmibank.com/api/tp-customers
+
+
+
+---------------------------------------POSTMANDE TOKEN ALMA ve Manuel Token Alma------------------------------------
+NOT:Token MANUEL olarak da alınabilir; Token alınacak siteye gidilir;Kullanıcı adı ve şifre ile girilir;sitede biryerde sağtıklanır incele denir;
+Application baslığına tıklanır; Soldaki "Storage" baslığının altındaki "Session Storage" ye tıklanır;Altında çıkan siteye tıklanıp sağtarafta Value olarak token alınır
+
+  1-URL:https://www.gmibank.com/api/authenticate (POST OLARAK BELİRLE)
+  2-Body kısmına tıkla (Aynı hizada olan başlıklar şunlar:Params,Authorization,Headers,Body,Pre-request Script-Tests-Settings)
+  3-radioButtonlardan "raw" olanı seç ve aynı hizada ensonda olan Mavi renkteki seçeneği "JSON" seç
+  4-Body kısmına(boş olupta sadece 1 yazan bölüme) kullanıcı adı password bodysini yaz.
+	{
+  "password": "Batch81+",
+  "rememberMe": true,
+  "username": "Batch81"
+	}
+  5-Send butonuna tıkla
+
+------------ALINAN TOKEN İLE JSCRİPT SORGUSU YAPMA--------
+
+  1-URL:https://www.gmibank.com/api/tp-customers (GET olarak belirle)
+  2-Authorization kısmına tıkla	ve Type'i "Bearer Token" seç
+  3-Token bölümüne elimizdeki tokeni yapıştır
+  4-Yine Authorization hizasındaki Tests kısmına tıkla ve JScrip sorgusunu buraya yapıştır
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+pm.test("Name Test", function () {
+    pm.expect(pm.response.text()).to.include("Della");
+});
+pm.test("First Name Test", function () {
+    var response = pm.response.json();
+    pm.expect(response.firstName).to.eql('Della');
+});
+pm.test("Phone Number", function () {
+    var response = pm.response.json();
+    pm.expect(response.phoneNumber).to.eql("213-456-7893");
+});
+pm.test("Credit Card Bakiye Testi", function () {
+    var response = pm.response.json();
+    pm.expect(response.accounts[0].balance).to.eql(69700);
+});
+pm.test("Cheking Bakiye Testi", function () {
+    var response = pm.response.json();
+    pm.expect(response.accounts[1].balance).to.eql(11190);
+});
+
+  5-Send butonuna tıkla
+
+---------------------------------------------------------INTELİJ'de YAPILAN API KONTROLU İÇİN NOTLAR---------------------------------------------------------
+------------------------------------------------------------Bu test için Maven projesi açılacaktır--------------------------------------------------------
+    pom.xml içinde bulunması gerekenler ==>>>  (Bütün testlerde bunlar yeterlidir)
+
+ <dependencies>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220924</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+----------------------------------------URL'e bir Stringe tanımlayarak InteliJ'de API Testi Yapma-------------------------------------------------------------
+
+NOT:importlar önemli yanlış yaparsan sorun olur.
+
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import org.junit.Test;
+import static io.restassured.RestAssured.given;
+
+ @Test
+    public void get01(){
+        String url = "https://reqres.in/api/users/3";  						//burada bize verilen url i bir String assign ettik
+
+        Response response=given().when().get(url);						//response olarak bize geri dönen veriyi aldık.
+        //response.prettyPrint();
+
+        response.then().assertThat().								//hard assert ile kontrolumuzu yaptık
+                statusCode(200).
+                contentType(ContentType.JSON).
+                statusLine("HTTP/1.1 200 OK");
+
+-------------------------------------------------------------------------------------------------------------------------------------
+ API Testi Yaparken Aklımızda Bulunacak Noktalar:
+
+	1-)Url' ya gitmek.(Bunu ister String bir variableye atnarak yapılır, istersekte base_url package altında baska class acıp
+base url buraya yazılır ve kullanılacak olan classtan extends edilerek çağırılır.base_url package altındaki classın içeriği aşagıda vardır.)
+
+	2-)Response tanımlamak.(Bu da bize verdiğimiz url'deki verileri geri dönüş olarak almadır.Bu verileri expected verilerimiz ile
+kıyaslamak için ileride ya response.then().assertThat().body() şeklinde ya JsonPath içine atarız veya da Map içine atıp kullanırız.)
+	
+	3-) -response'den direk assert yapmak (Matchers.equalto() yöntemi) ;
+			
+			response.then().
+                			assertThat().
+                			body("data[0].email",equalTo("george.bluth@reqres.in"),
+                     			     "data[0].first_name",equalTo("George"))
+		Açıklaması:Burada responseyi yazdıktan sonra data'nın altında içinde birden fazla body bulunan çıktı geldiğinden ilk
+			   bodynin verilerini kontrol için data[0] şeklinde yazıldı sonra da .(nokta) koyulup alt dizine girildi.
+				bu örnek APIBatch81/Get03c classından alındı. Testte kullanılan URL:https://reqres.in/api/users
+
+(ÖNEMLİ NOT import'lar JUnit'ten olacak)
+---------------------------------------------------INTELİJ'de KENDİ FRAMEWORK'UMUZU OLUŞTURMAK--------------------------------------------------------------
+-------------------------------(base url'yi baska classa tanımlayıp kullanacak olduğumuzda o class'a extends yaparak kullanma)------------------------------
+
+1-)İnteliJ'de maven projesi açıp pom.xml eklemelerini yaptıktan sonra src->test->java package'leri altına base_urls adında package açılır.
+2-)Kullanılacak olan sitenin adıyla class olusturulur.(Örn: GoogleBaseUrl formatında)
+3-)Class'ın içine instance olan "protected RequestSpecification spec;" tanımlanır
+4-)@Before notasyonu tanımlanır(junit'den import edilecek = import org.junit.Before;) notasyon adı setup olacaktır.
+5-)body içerisine "spec=new RequestSpecBuilder().setBaseUri("Buraya Base URL Yazılacaktır").build();" yazılır.
+
+	Örnek Classın içerisi;
+
+package base_urls;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
+
+public class AutomationexerciseBaseUrl {
+    protected RequestSpecification spec;
+
+    @Before
+    public void setup(){
+        spec=new RequestSpecBuilder().setBaseUri("https://automationexercise.com/api").build();
+    }
+}
+
+6-)Daha sonra yine src->test->java package'leri altına get_request package oluşturulur ve API testi yapılacak classlar burada oluşturulur.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------base_urls package altında OLUSTURULAN CLASSTAN URL ÇEKEREK API TESTİ YAPMA----------------------------------
+
+1-)base_urls package altında class oluşturulup kodları yazıldıktan sonra; src->test->java->get_request package altında yapılacak API testi classı açılır.
+2-)class base_urls package nin altında oluşturulan classa extends edilir.(bu sayade @Before notasyonuna ve spec variblesine erişilir)
+3-)Junit'ten @Test notasyonu olusturulur
+4-)Örnekle anlatıma devam ediyorum: 		URL:https	 	: //reqres.in/api/users/23
+						base_url olarak	 	: https://reqres.in/api
+						Test notasyonun altına  : spec.pathParams("first","users","second",23);  //Buradaki first ilk parametre adı
+															 //second ikinci parametre adı
+															 //eğer parametre 1 tane ise pathParam() seçilir
+									  Response response= given().spec(spec).when().get("/{first}/{second}");
+        								  response.prettyPrint();				//döndürülen veriyi yazdırır
+
+									//şeklinde tanımlanır ve base_url cekilmiş olur
+
+
+----------------------------------------spec'li Classlara örnek(örnekte aynı koduları aldım çalışır durumdadır)---------------------------------------------------
+NOT: pom.xml'e yukarıdaki kodları atmayı unutma
+
+------------------API testi yapılacak class-------------
+
+package get_request;
+import base_urls.ReqresBaseUrl;
+import io.restassured.response.Response;
+import org.junit.Test;
+import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+
+public class Get02b_BodyBosOldugunuKontrolEtme extends ReqresBaseUrl {
+      /*
+       https://reqres.in/api/users/23
+       User send a GET Request to the url
+       HTTP Status code should be 404
+       Status Line should be HTTP/1.1 404 Not Found
+       Server is "cloudflare"
+       Response body should be empty   */
+
+    @Test
+    public void get02b(){
+
+        spec.pathParams("first","users","second",23);
+
+        Response response= given().spec(spec).when().get("/{first}/{second}");
+        response.prettyPrint();
+
+        assertEquals(404,response.statusCode());
+        assertEquals("HTTP/1.1 404 Not Found",response.statusLine());
+        assertEquals("cloudflare",response.header("Server"));
+        assertEquals(2,response.asString().replaceAll("\\s","").length());//response'yi String'e cevirdik
+        //assertEquals(0,response.asString().replaceAll("[^A-Za-z0-9]","").length());
+    }
+}
+
+----------base_urls Package altındaki class--------
+
+package base_urls;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
+public class ReqresBaseUrl {
+    protected RequestSpecification spec;
+    @Before
+    public void setup(){
+        spec=new RequestSpecBuilder().setBaseUri("https://reqres.in/api").build();
+    }
+}
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------assert Komutları------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-----------------------------HARD ASSERT  ile Genel Veriler Bakma ------------------
+
+1. Kullanım şekli;
+NOT:Burada Equals(eşitlik) kullanıldı
+
+assertEquals(404,response.statusCode());		      //response'den donen Status Code'yi 404'e eşit olduğuna bakar    (bu tek 404 olmaz 200,300 diye de vardır)
+assertEquals(200,response.statusCode());		      //response'den donen Status Code'yi 200'e eşit olduğuna bakar
+assertEquals("HTTP/1.1 404 Not Found",response.statusLine()); //response'den donen Status Line'nin "HTTP/1.1 404 Not Found" eşit olduğuna bakar
+assertEquals("cloudflare",response.header("Server"));         //baslıklar bölümünde "Server" in "cloudflare" e eşit olduğunu kontrol eder
+
+2. Kullanım şekli;
+NOT:Burada Equals(eşitlik) kullanıldı
+
+  response.then().
+                assertThat().					//bu satırı yazmasakta calışır
+                statusCode(200).
+                contentType(ContentType.JSON).
+                statusLine("HTTP/1.1 200 OK");
+
+------------------------------------------------------------------------------------
+---------------------------HARD ASSERT  ile BODY İçindeki Verilere Bakma -----------
+
+------------------------------------------------
+-----Bize response'den aşağıdaki data olarak belirtilenin altında 1 body dondugunde gibi veri döndüğünde;
+
+Response de dönen veri:
+
+{
+    "data": {
+        "id": 2,
+        "email": "janet.weaver@reqres.in",
+        "first_name": "Janet",
+        "last_name": "Weaver",
+        "avatar": "https://reqres.in/img/faces/2-image.jpg"
+    },
+    "support": {
+        "url": "https://reqres.in/#support-heading",
+        "text": "To keep ReqRes free, contributions towards server costs are appreciated!"
+    }
+}
+
+InteliJ KODU:
+
+		response.then().
+                assertThat().      					//burası olsada olur olmasada
+                statusCode(200).
+                contentType(ContentType.JSON).
+                body("data.email",equalTo("janet.weaver@reqres.in"),	//equalTo(); Matchers.equalTo() şeklinde de kullanılır
+                        "data.first_name",equalTo("Janet"),
+                        "data.last_name",equalTo("Weaver"),
+                        "support.text",equalTo("To keep ReqRes free, contributions towards server costs are appreciated!"));
+
+
+------------------------------------------------
+-----Bize response'den aşağıdaki data olarak belirtilenin altında birden fazla body dondugunde yapılacak HARD ASSERT;
+
+{
+    "page": 1,
+    "per_page": 6,
+    "total": 12,
+    "total_pages": 2,
+    "data": [
+        {
+            "id": 1,
+            "email": "george.bluth@reqres.in",
+            "first_name": "George",
+            "last_name": "Bluth",
+            "avatar": "https://reqres.in/img/faces/1-image.jpg"
+        },
+        {
+            "id": 2,
+            "email": "janet.weaver@reqres.in",
+            "first_name": "Janet",
+            "last_name": "Weaver",
+            "avatar": "https://reqres.in/img/faces/2-image.jpg"
+        },
+	.
+	.
+	.(burada aşağıya doğru bodyler devam ediyor)
+}
+
+ InteliJ KODU:
+		response.then().
+                assertThat().
+                body("data[0].email",equalTo("george.bluth@reqres.in"),  //burada veriler data'nın altında oldugu için ilk dataya girilir ve ilk bodysi içinde [0] diye
+                        "data[0].first_name",equalTo("George"),		 // belirtilir. Burada equalTo (Matchers.equalTo şeklinde de kullanılır) bizden expected olarak
+                        "data[0].last_name",equalTo("Bluth"),		// verilen kontrol etmemiz istenel veridir
+                        "data[0].avatar",equalTo("https://reqres.in/img/faces/1-image.jpg"))
+
+------------------------------------------------------------------------------------
+-----------------------------------SOFT ASSERT Verilere Bakma ----------------------
+
+        SoftAssert softAssert = new SoftAssert();
+ 	softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertEquals(response.contentType(), "application/json; charset=utf-8");
+	softAssert.assertAll();
+
+
+Eğer body içi kontrol edilecek olursa;
+
+	Response response=given().when().get(url);
+	JsonPath actBody = response.jsonPath();
+
+	JSONObject expBody=new JSONObject();
+	expBody.put("userId",5);
+	expBody.put("title","optio dolor molestias sit");
+
+	softAssert.assertEquals(expBody.get("title"),actBody.get("title"));
+        softAssert.assertEquals(expBody.get("userId"),actBody.get("userId"));
+        softAssert.assertAll();
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+-----------------------------------------------Response'de Boş Body olup olmadığını kontrol etme-------------------------------------------------------------------
+
+assertEquals(2,response.asString().replaceAll("\\s","").length());//response'yi as.String() methodu ile Stringe cevirdik replaceAll("\\s","") ile butun boslukları
+								  //hiçliğe cevirdik.Boylece sadece body parantezleri kaldı ve length()=2 oldu
+
+assertEquals(0,response.asString().replaceAll("[^A-Za-z0-9]","").length()); // bu kodda response içindeki butun sayı ve harfler dısındaki herseyi hiçliğe çevirip
+									    //length() i 0 olduğuna bakar
+
+
+
