@@ -1,0 +1,101 @@
+
+1.Selenium 4 te gelen yenilik den sordu.(Benim bildigim navigate özelliği geldi.Yani locate aldğımız elementin altındaki elemente tıklama gibi)
+2.finally ile ilgili soru vardı(finally variblenin basına yazıldığında değiştirilemiyordu o varible, birdetry cath de kullanılıyor)
+3.Selenium da senkronizasyonu nasıl kontrol ederiz(implictliy wait, explicitly wait, fluent wait)
+4.Deserilization yapma nedir(API teslerinde JSON formatından Java diline çevirmede kullanılır.)
+5.Dinaik token nasıl handle ederiz(bir tane classta response olarak post işlemiyle tokenı method olarak yapabiliriz)
+6.Performans test araçlanırı söyleyin
+
+
+----------------------------Melisa Memnun işe alım uzmanı:----------------------------
+
+
+
+
+Yasemin hanım interview soruları;
+
+****** Entegression -Unıt test farkı 
+(entegrasyon'u iki veya daha fazla fonksiyonu birbirine entegre etmekten akılda tutulabilir)
+
+Entegression Testi;Örneğin registiration işleminde Adı,Soyadı,username,SSN,email vs. gibi functionality lerin entegere olarak calısmasına denilir.BlackBox testi'dir.
+		   2.Örnek ürün aratırken girilen kriterlerin biribiri ile uyumlu olması lazım. Ada göre sırala derken; fiyatı ucuz olandan pahalıya doğru sırala 
+denilebilmeyi test etmek
+
+Unıt Test; örneğin password girisinde verilen kriteler var bunların kodsal olarak test edilmesi (whiteBox test)asdAS123.
+
+****** Regression testi nedir  (genelde yılda bir olur)
+entegression testinin farklı farklı suitlerde kullanılabiliyor olmasıdır. Örneğin yukarıda bahsedilen işlemleri admin kullanıcısında, doktor kullanıcısında da
+yapılmasına denir.
+Daha önce kontrolu yapılmış bir uygulamanın testi yapıldıktan sonra, tekrar yeni kod yazıldığında tekrar test edilmesidir.
+
+Minor(kısmi) regresyon test
+Her sprint sonrasında yapılır. eklenen yeni modul projeyle uyumlu çalısıyor mu kontrol edilir
+
+Major(tam) regresyon test
+2-3 ayda bir testlerin kontrol edilmesi 
+
+
+****** Postman de otomasyon yaptınız mı neler yaptınız 
+
+****** Agile- Waterfall farkı
+
+Agile ve Waterfall modellerinin ikisinde de planlama yapılır. Ancak bu modellerin planlama anlayışları birbirinden farklıdır. 
+Waterfall modeli baştan sona her ayrıntıyı adım adım ve uzun vadeli planlarken; Agile modelinde kısa vadeli planlar söz konusu olur.
+ Çünkü, Agile yaklaşıma göre proje süreci devam ederken değişiklik yapılabilir. Her aşama Waterfall modelinde olduğu kadar net değildir.
+Waterfall modelinde birbirini takip eden bir görev sırası oluşturulur. Her safha bir öncekinin devamı niteliğindedir. 
+Agile proje yönetimi sürecinde böyle bir düzen yoktur. Projenin nasıl ilerleyeceği süreç içerisinde değişebilir.
+Her iki modelde de detaylı inceleme yapılır. Ancak bu incelemeler Waterfall modelinde dokümanlar üzerinden ve her safhanın tamamlanmasının ardından
+düzenli olarak yapılırken Agile yaklaşım modelinde inceleme, ortaya çıkan ürünler ve müşteriler ile yapılan görüşmelerle gerçekleşir.
+Waterfall modeli uygulanan projelerde maliyeti artıracağı için değişikliklere sıcak bakılmaz. Agile yaklaşım modelinde ise ürün son halini 
+alana kadar gerekirse bir ya da birçok kez revize edilebilir. Çünkü Agile yaklaşımda değişim, ürünün olabilecek en iyi versiyonu için gereklidir.
+Agile, yaratıcılık odaklı olduğundan kararlarda esnek bir yaklaşım söz konusudur. Waterfall modeli için bunu söylemek zordur. Bu model kurallara ve 
+başlangıç noktasında alınan kararlara bağlıdır; risk almaz.
+
+****** Manuel testı ototmasyon testı karsılar mı 
+****** Bug raporunda neyi belırttınız
+
+****** Bug asamalarını anlatır mısınız
+Hata Yaşam Döngüsü (Bug Life cycle), bir hatanın açılışından kapanmasına kadar geçirdiği evreler olarak tanımlanabilir. 
+Yazılım projelerinde hatalar, projenin doğasına uygun sistematik bir yaklaşımla ele alınmalıdır.
+
+# 1) Yeni :Bu, Kusur Yaşam Döngüsündeki bir kusurun ilk durumudur. Herhangi bir yeni kusur bulunduğunda, 'Yeni' durumuna düşer ve Kusur Yaşam Döngüsünün sonraki aşamalarında bu kusur üzerinde doğrulamalar ve testler gerçekleştirilir.
+
+# 2) Atanan: Bu aşamada, yeni oluşturulan bir kusur, kusur üzerinde çalışması için geliştirme ekibine atanır. Bu, proje lideri veya test ekibinin yöneticisi tarafından bir geliştiriciye atanır.
+
+# 3) Açık: Burada geliştirici, kusuru analiz etme sürecini başlatır ve gerekirse düzeltmeye çalışır. Geliştirici kusurun uygun olmadığını düşünürse, aşağıdaki dört durumdan birine aktarılabilir: Yinelenen, Ertelenen, Reddedilen veya Hata Değil -özel nedene göre.
+
+Bu dört durumu birazdan tartışacağım.
+
+# 4) Sabit: Geliştirici, gerekli değişiklikleri yaparak bir kusuru düzeltme görevini bitirdiğinde, kusurun durumunu 'Düzeltildi' olarak işaretleyebilir.
+
+# 5) Yeniden Test Bekleniyor: Kusurun giderilmesinden sonra, geliştirici, kusurun sonunda yeniden test edilmesi için arızayı test cihazına atar ve test cihazı arızayı yeniden test etmeye çalışıncaya kadar, kusurun durumu 'Yeniden Test Bekleniyor' da kalır.
+
+# 6) Tekrar test edin: Bu noktada, test uzmanı, kusurun geliştirici tarafından gereksinimlere göre doğru bir şekilde düzeltilip düzeltilmediğini doğrulamak için kusurun yeniden test edilmesi üzerinde çalışmaya başlar.
+
+# 7) Yeniden Aç: Kusurda herhangi bir sorun devam ederse, test için tekrar geliştiriciye atanır ve kusurun durumu 'Yeniden Aç' olarak değiştirilir.
+
+# 8) Doğrulandı: Test cihazı geliştiriciye yeniden test edilmek üzere atandıktan sonra kusurda herhangi bir sorun bulamazsa ve kusur doğru bir şekilde giderilmişse kusurun durumunun 'Doğrulandı' olarak atanacağını düşünür.
+
+# 9) Kapalı: Kusur artık mevcut olmadığında, test uzmanı kusurun durumunu 'Kapalı' olarak değiştirir.
+
+
+****** Bug asamalarını nasıl anlasılır kılarsın
+
+
+****** Gherkin nedır 
+ Yazılımcı olmayan kişiler tarafından öğrenilebilecek şekilde tasarlanmıştır. İçerisinde bazı anahtar kelimeleri kullanarak kısa ve düzgün bir hikaye anlatımı sağlanmaya çalışılmıştır.
+
+****** Regressionda neyi ele alırsınız
+
+****** Smoke-Sanity test farkı nedır
+Sanity test: Hata belirlenir okısım düzeltilir, sonra tekrar oranın test edilmesidir.
+
+****** SDLC asamaları nelerdır
+****** Manuel test yapıyorsun sayfa acılmıyor nasıl bır yol ızlersın
+****** Test case yazımı
+****** Apı de status code lar nelerdır
+****** Testerın rollerı
+****** Apı de verılen-karsılasılan arasındakı farkı nasıl kontrol edrsınız
+****** HTTP protokolu nedır
+****** Saap-Rest farkı nedır
+****** Lambdayı hangı asamada nıcın kullandınız
