@@ -7,8 +7,9 @@
 6.Performans test araçlanırı söyleyin
 
 
-----------------------------Melisa Memnun işe alım uzmanı:----------------------------
+----------------------------Melisa Memnun işe alım uzmanı(Youtubeden):----------------------------
 
+----------------------------Melisa Memnun işe alım uzmanı(Youtubeden):----------------------------
 
 
 
@@ -88,8 +89,8 @@ Bu dört durumu birazdan tartışacağım.
 ****** Regressionda neyi ele alırsınız
 
 ****** Smoke-Sanity test farkı nedır
-Sanity test: Hata belirlenir okısım düzeltilir, sonra tekrar oranın test edilmesidir.
-
+Sanity test: Hata belirlenir o kısım düzeltilir, sonra tekrar oranın test edilmesidir.
+****** Abstrak ve interface 
 ****** SDLC asamaları nelerdır
 ****** Manuel test yapıyorsun sayfa acılmıyor nasıl bır yol ızlersın
 ****** Test case yazımı
@@ -99,3 +100,7 @@ Sanity test: Hata belirlenir okısım düzeltilir, sonra tekrar oranın test edi
 ****** HTTP protokolu nedır
 ****** Saap-Rest farkı nedır
 ****** Lambdayı hangı asamada nıcın kullandınız
+****** Log4J den bahsedin
+****** POM(Page Object Model) dan bahsedin
+****** Locate almayı anlatın
+****** Bir bug bulduğunuzda ne yaparsınız, içine ne koyarsınız(Print Screen, Record vs.)
