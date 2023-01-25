@@ -1,2 +1,122 @@
 --------------------------------------SCOPE(KAPSAM)-------------------------------------------------
 Global Scope
+
+
+-----------------------------------------------------------------------------------------------------
+
+//*Document write ile cıktı verme
+
+// document.write("Hello World <br>");
+// document.write("Mustafa SAK <br>");
+// document.write(51.5);
+//! CTRL+Ö Seçili olan bütün satırları yorum satırı yapar
+
+//------------------------------------------------
+
+//*console log metodunu kullanırız.
+
+// console.log("Hello World");
+// console.log(3.85);
+// console.log({name:"Mustafa",surname:"Sak"});
+
+//console.clear(); //eğer bu satırı yazarsak yukarıda console yazdıklarımız silinir
+
+//------------------------------------------------
+
+// let a=5;
+// let b=10;
+
+// console.log("iki saynın toplamı= "+(a+b));
+// console.log("iki saynın toplamı= ",(a+b));
+
+//------------------------------------------------
+
+
+//*Alert(Uyarı) popup ile cıkti verme islemleri
+
+//console.log(window);
+//console.log(document.location.host);
+
+//alert("Merhaba");
+
+// console.error("Hata");
+// debugger;
+// console.error("Hata");
+// console.error("Hata");
+// console.error("Hata");
+
+/*
+yorum satırı olusturma
+yorum satırı olusturma
+
+?bu bir bilgilendirme
+!burası cok onemlidir
+*Test Mesajı
+
+ */
+ 
+ --------------------------------------------------------------------------------------------------------
+ -----------------------------------------------var  let const-------------------------------------------
+ function selamVer(){
+    var selam="Herkese selam";
+    console.log(selam);
+    if(true){
+        var varFunctionScope="Var Funtion Scope";
+        let letFunctionScope="let function scope";
+
+        var x=4;
+        var x=90;//burada tekrar oluşturmaya izinverdi
+        console.log(x);
+
+        let a=3;//burada tekrar oluşturaya izin vermedi
+       //* let a=9;
+        console.log(a);
+    }
+    console.log(varFunctionScope);//var ile tanımlayınca her yerden erişebiliyoruz scope etkilemez
+   //* console.log(letFunctionScope);//scope ye bakar, scope dışında çalışmaz
+
+   const b=10;
+//    b=7; //buna izin vermez, yanı tekrar değer atamasına izin vermez
+//    console.log(b);
+
+   let c=10;
+   c=18; //tekrar değer atamsına izin verir.
+   console.log(c);
+//!--------------------------------------------
+//!normalde const variable değerleri 1 kere atanır bir daha atama yaptırmaz
+//!obje oluşturulunca aşağıdaki gibi obje içeriği değiştirilebilir
+   const user={
+    username:"mustafa",
+    password:"123"
+   }
+   //user={}; izin vermez
+
+   user.username="mustafasak";//burda body içinde değişiklik yaptık
+   console.log(user);
+
+    }
+
+    
+   selamVer();
+
+/*
+!Yukarıdaki uygulamaların açıklamaları
+
+!var ile tanımlanınca;
+  1: scope de etkilenmez olulturulan variable her yerden çağırılabilir
+  2: bellekte çok fazla yer kaplar
+  3: tekrar aynı isimde değişken tanımlamasına izin verir
+
+!let/const ile tanımlanınca;
+  1: block scope özelliğine sahiptir. scope dışındaki variableyi çağrılmaz
+  2: tekrar değişken tanımlamaya izin vermez
+
+!let/const arasındaki fark;
+  1: let ile tanımlanan variable tekrar değer atamasına izin verirken;
+   const(sabit) ile tanımlanan variable tekrar değer atamasına izin vermez.
+
+!const obje oluşturulurken ki özel durum;
+  1: const ile obje olusturulunca yine variable deki gibi direk değer değiştilmez(user={}; izin vermez)
+    Fakat objenin içindeki değer değiştirilebilir.(user.username="mustafasak";)
+ */
+
