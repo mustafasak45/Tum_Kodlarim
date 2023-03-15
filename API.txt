@@ -70,6 +70,10 @@ https://www.gmibank.com/api/authenticate
 http://www.gmibank.com/api/tp-customers
 
 
+-----------------------------Enviroments' e JavaScript Kodlarıyla Variable Ekleme----------------------------------
+let response=pm.response.json();
+console.log(response.id);
+pm.environment.set("userIdOto",response.id);
 
 ---------------------------------------POSTMANDE TOKEN ALMA ve Manuel Token Alma------------------------------------
 NOT:Token MANUEL olarak da alınabilir; Token alınacak siteye gidilir;Kullanıcı adı ve şifre ile girilir;sitede biryerde sağtıklanır incele denir;
