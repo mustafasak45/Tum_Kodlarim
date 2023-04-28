@@ -1,0 +1,13 @@
+-------------------------------DEVICE NAME Bakmak için---------------------------
+1-cmd ekranını aç
+2-"adb devices" yaz
+
+
+
+---------------------------appPackage , appActivity ne olduğuna bakmak için------------------,
+1-cmd ekranını aç
+2-"adb shell" yaz
+3-dumpsys window | grep -E "mCurrentFocus"  kodunu yaz(not: bu kodu yazıp entera basmadan önce cihazın ekranı açık olmalıdır)
+4-Örnek: mCurrentFocus=Window{872e8fe u0 com.android.launcher3/com.android.launcher3.Launcher}  böyle bir sonuç dönecektir
+    appPackage: com.android.launcher3
+    appActivity: com.android.launcher3.Launcher
