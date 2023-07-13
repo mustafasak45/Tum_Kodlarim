@@ -42,6 +42,16 @@ insert into student(st_name,age) VALUES ('Mustafa CAN',65);
 
 Aciklamasi:student tablosunda "id,st_name,age" fieldlari var, biz sadece "st_name,age" fieldlarina
 veri ekledik.
+
+--Çok fazla veri eklemek için; not naşına tekrar tekrar INSERT INTO yazmaya gerek kalmıyor...
+INSERT INTO ogrenciler (id, isim, adres, sinav_notu) VALUES
+(1, 'Ahmet Yılmaz', 'Ankara', 80),
+(2, 'Burcu Öztürk', 'İstanbul', 90),
+(3, 'Cemal Doğan', 'İzmir', 70),
+(4, 'Deniz Arslan', 'Adana', 85),
+(5, 'Ebru Kaya', 'Bursa', 95),
+(6, 'Fatih Demir', 'Antalya', 65),
+(7, 'Gizem Tekin', 'Konya', 75);
 -------------------------------------------------------------------------
 -- DML --> Data Manupulation Lang.
 
